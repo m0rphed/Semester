@@ -62,8 +62,6 @@ module Main =
              let x = Console.ReadLine() |> int 
              let array = domashka.create_array x 
              printfn ("Введите левую границу :")
-             let selement = Console.ReadLine() |> int
-             printfn ("Введите правую границу :")
              let felement = Console.ReadLine() |> int
              printfn ("Введите правую границу :")
              let selement = Console.ReadLine() |> int
