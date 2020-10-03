@@ -65,6 +65,8 @@ module Main =
              let selement = Console.ReadLine() |> int
              printfn ("Введите правую границу :")
              let felement = Console.ReadLine() |> int
+             printfn ("Введите правую границу :")
+             let selement = Console.ReadLine() |> int
              let thirdarray = domashka.Fourthtask array felement selement 
              printfn ("Индексы элементов вне диапазона :")
              printfn ("%A") thirdarray
@@ -106,17 +108,15 @@ module Main =
          elif results.Contains Task10 then
             printfn ("Введите число фибоначи, которое хотите вычислить")
             let q = Console.ReadLine() |> int
-            let result = domashka2.Task10 q
-            let result2 = result.[0].[1]
+            let result = domashka2.Task10 q           
             printfn ("Число фибоначи равно =")
-            printfn ("%A") (result2 )
+            printfn ("%A") (result)
          elif results.Contains Task11 then
             printfn ("Введите число фибоначи, которое хотите вычислить")
             let y = Console.ReadLine() |> int
-            let result = domashka2.Task11 y
-            let result2 = result.[0].[1]
+            let result = domashka2.Task11 y           
             printfn ("Число фибоначи равно =")
-            printfn ("%A") (result2)
+            printfn ("%A") (result)
          elif results.Contains Task12 then
             printfn ("Введите число, до которого выведутся числа фибоначи ")
             let t = Console.ReadLine() |> int
