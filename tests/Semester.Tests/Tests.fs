@@ -3,17 +3,16 @@ module Tests
 
 open Expecto
 open Semester
-
 [<Tests>]
-let tests3 =
-    testList "samples"
+let tests1 =
+    testList "first task tests"
         [
-            testCase "Given empty array gives empty array thirdtask" <| fun _ ->
-                let subject = domashka.Thirdtask [||] 3
-                Expect.equal subject [||] "Given empty array"          
-            testCase "Positive always greater than negative its obvious,thirdtask" <| fun _ ->
-                let subject = domashka.Thirdtask [|-2; -1; 1; 2 |] 0
-                Expect.equal subject [| 0; 1 |] "result must be equal [| 0; 1 |]"
+            testCase "first task for x = 0" <| fun _ ->
+                let subject = domashka.Ftask 0.
+                Expect.equal subject 1. "result must be equal 1."
+            testCase "the polynomial takes the value 121 for x = 3" <| fun _ ->
+                let subject = domashka.Ftask 3.
+                Expect.equal subject 121. "result must be equal 121."
         ]
 [<Tests>]
 let tests2 =
@@ -27,6 +26,17 @@ let tests2 =
                 Expect.equal subject 121. "result must be equal 121.0"  
         ]
 [<Tests>]
+let tests3 =
+    testList "samples"
+        [
+            testCase "Given empty array gives empty array thirdtask" <| fun _ ->
+                let subject = domashka.Thirdtask [||] 3
+                Expect.equal subject [||] "Given empty array"          
+            testCase "Positive always greater than negative its obvious,thirdtask" <| fun _ ->
+                let subject = domashka.Thirdtask [|-2; -1; 1; 2 |] 0
+                Expect.equal subject [| 0; 1 |] "result must be equal [| 0; 1 |]"
+        ]
+[<Tests>]
 let tests4 =
     testList "fourth task tests"
         [
@@ -36,16 +46,6 @@ let tests4 =
             testCase "Given empty array gives empty array fourth task" <| fun _ ->
                 let subject = domashka.Fourthtask [||] 3 5 
                 Expect.equal subject [||] "Given empty array"
-        ]
-let tests1 =
-    testList "first task tests"
-        [
-            testCase "fifth task for x = 0" <| fun _ ->
-                let subject = domashka.Ftask 0.
-                Expect.equal subject 1. "result must be equal 1."
-            testCase "the polynomial takes the value 121 for x = 3" <| fun _ ->
-                let subject = domashka.Ftask 3.
-                Expect.equal subject 121. "result must be equal 121."
         ]
 [<Tests>]
 let tests5 =
@@ -61,12 +61,9 @@ let tests5 =
 [<Tests>]
 let tests6 =
     testList "sixth task tests"
-        [
+        [   testCase "throws" <| fun _ ->
+                Expect.throws (fun _ -> domashka.Sixthtask [|1; 2; 3|] -1 5 |> ignore) "exception"
             testCase "input value 3" <| fun _ ->
                 let subject = domashka.Sixthtask [|0; 1; 2; 3; 4; 5|] 1 2
                 Expect.sequenceEqual subject [|0; 2; 1; 3; 4; 5|] "result must be equal [|0; 2; 1; 3; 4; 5|]"
-        ]
-            
-
-
-
+        ]            

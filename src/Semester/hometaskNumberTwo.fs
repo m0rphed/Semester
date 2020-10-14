@@ -15,35 +15,36 @@ module domashka =
         printfn "%A" array
         array
 
-    let Thirdtask (array: int array)   bigelement =
+    let Thirdtask (array: int array) bigelement =
         let mutable k = 0
         for i = 0 to array.Length - 1 do 
-            if array.[i] < bigelement then
-                k <- k + 1
+            if array.[i] < bigelement
+            then k <- k + 1
         let secondarray = Array.zeroCreate k
         k <- 0
         for i = 0 to array.Length - 1 do 
-            if array.[i] < bigelement then
+            if array.[i] < bigelement
+            then
                 secondarray.[k] <- i
                 k <- k + 1
         secondarray 
 
-    let Fourthtask (array: int array)  felement selement =
+    let Fourthtask (array: int array) felement selement =
         if felement > selement
         then failwith "left can be lesser than right try again"
         let mutable k = 0
         for i = 0 to array.Length - 1 do 
-            if (array.[i] > selement) then 
-                k <- k + 1
-            if (array.[i] < felement) then
-                k <- k + 1
+            if array.[i] > selement
+            then k <- k + 1
+            if array.[i] < felement
+            then k <- k + 1
         let thirdarray = Array.zeroCreate k
         k <- 0
         for i = 0 to thirdarray.Length - 1 do 
-           if (array.[i] > selement) then
-               thirdarray.[k] <- i
-           if (array.[i] < felement) then  
-               thirdarray.[k] <- i
+           if array.[i] > selement
+           then thirdarray.[k] <- i
+           if array.[i] < felement
+           then thirdarray.[k] <- i
            k <- k + 1     
         thirdarray   
 
@@ -53,20 +54,13 @@ module domashka =
         array.[0] <- array.[0] - array.[1]
         array
 
-    let Sixthtask (array: int array) z v = 
-        array.[z] <- array.[z] + array.[v]
-        array.[v] <- array.[z] - array.[v]
-        array.[z] <- array.[z] - array.[v]
-        array
-
-
-
-            
-            
-        
-
-
-        
-             
-
-            
+    let Sixthtask (array: int array) z v =
+        if z > array.Length || v > array.Length || z < 0 || v < 0 
+        then failwith "out of bounds of array"
+        if z = v
+        then array
+        else
+            array.[z] <- array.[z] + array.[v]
+            array.[v] <- array.[z] - array.[v]
+            array.[z] <- array.[z] - array.[v]
+            array
