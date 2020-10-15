@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Semester": {
+      "commandName": "Project",
+      "commandLineArgs": "--sixthtask"
+    }
+  }
+}

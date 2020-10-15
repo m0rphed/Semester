@@ -3,11 +3,15 @@
     <PropertyGroup>
         <OutputType>Exe</OutputType>
         <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
         <Compile Include="Tests.fs" />
         <Compile Include="Main.fs" />
+    </ItemGroup>
+    <ItemGroup>
+      <PackageReference Include="Expecto.FsCheck" Version="8.13.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Semester/Semester.fsproj" />

@@ -1,0 +1,5 @@
+﻿1>------ Сборка начата: проект: Semester, Конфигурация: Debug Any CPU ------
+1>Semester -> C:\Users\Андрей\Desktop\HOMETASK — копия\src\Semester\bin\Debug\netcoreapp3.1\Semester.dll
+2>------ Сборка начата: проект: Semester.Tests, Конфигурация: Debug Any CPU ------
+2>Semester.Tests -> C:\Users\Андрей\Desktop\HOMETASK — копия\tests\Semester.Tests\bin\Debug\netcoreapp3.1\Semester.Tests.dll
+========== Сборка: успешно: 2, с ошибками: 0, без изменений: 0, пропущено: 0 ==========
