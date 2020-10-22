@@ -7,20 +7,16 @@ module domashka2
         elif n = 0
         then 0
         else Task7 (n - 1) + Task7 (n - 2)       
-    let Task8 t =
-        if t < 0 
-        then failwith "Fibonacci number is not negative"       
-        if t = 1
-        then 1
-        elif t = 0
-        then 0
-        else
-            let a = [|0 .. t - 2|]
-            for i in 0 .. t - 2 do
-                if i = 0 || i = 1
-                then a.[i] <- i + 1
-                else a.[i] <- a.[i - 1] + a.[i - 2]
-            a.[t - 2]                  
+    let Task8 x =
+        if x = 0 || x = 1 then x
+        elif x < 0 then failwith "X can be positive"
+        else 
+            let mutable left = 0
+            let mutable right = 1
+            for i = 0 to x-2 do
+                right <- left + right
+                left <- right - left
+            right               
     let Task9 q =
         if q < 0
         then failwith "Fibonacci number is not negative"
@@ -38,16 +34,20 @@ module domashka2
         for i in 2 .. t do 
             a.[i] <- a.[i - 1] + a.[i - 2]
         a   
-    let multiply (o: array<array<int>>) (t: array<array<int>>) = 
+    let multiply (o: array<array<int>>) (t: array<array<int>>) =       
         let I = o.Length 
         let J = o.[0].Length
         let K = t.[0].Length
-        let Matrix = Array.init I ( fun _ -> Array.zeroCreate J )
-        for i in 0 .. I - 1 do 
-            for j in 0 .. J - 1 do 
-                for k in 0 .. K - 1 do 
-                    Matrix.[i].[j] <- Matrix.[i].[j] + (o.[k].[j] * t.[i].[k])
-        Matrix
+        if I = K
+        then
+            let Matrix = Array.init I ( fun _ -> Array.zeroCreate J )
+            for i in 0 .. I - 1 do 
+                for j in 0 .. J - 1 do 
+                    for k in 0 .. K - 1 do 
+                        Matrix.[i].[j] <- Matrix.[i].[j] + (o.[k].[j] * t.[i].[k])
+            Matrix
+        else failwith "Cannot multiply this"
+            
     let Matrixpow0 x =
         let matrix = Array.init x (fun _ -> Array.zeroCreate x)
         for i in 0 .. x - 1 do
