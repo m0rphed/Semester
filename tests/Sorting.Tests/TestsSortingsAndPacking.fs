@@ -44,19 +44,19 @@ let ChecksFunctions =
 let ChecksPackingUnpacking =
     testList "Checking"
         [
-        testProperty "32 to 64"
-        <| fun (n,i) -> Expect.equal (n,i) (Homework4.Unpacking64to32 (Homework4.Packing32to64 (n,i)))
-        testProperty "16 to 64"
-        <| fun (a,b,c,d) -> Expect.equal (a,b,c,d) (Homework4.Unpacking64to16 (Homework4.Packing16to64 (a,b,c,d)))
+            testProperty "32 to 64"
+            <| fun (n,i) -> Expect.equal (n,i) (Homework4.Unpacking64to32 (Homework4.Packing32to64 (n,i)))
+            testProperty "16 to 64"
+            <| fun (a,b,c,d) -> Expect.equal (a,b,c,d) (Homework4.Unpacking64to16 (Homework4.Packing16to64 (a,b,c,d)))
         ]
 [<Tests>]
 let ChecksUnpackingPacking =
     testList "Checking"
         [
-        testProperty "64 to 32"
-        <| fun n -> Expect.equal n (Homework4.Packing32to64 (Homework4.Unpacking64to32 n))
-        testProperty "64 to 16"
-        <| fun n -> Expect.equal n (Homework4.Packing16to64 (Homework4.Unpacking64to16 n))
+            testProperty "64 to 32"
+            <| fun n -> Expect.equal n (Homework4.Packing32to64 (Homework4.Unpacking64to32 n))
+            testProperty "64 to 16"
+            <| fun n -> Expect.equal n (Homework4.Packing16to64 (Homework4.Unpacking64to16 n))
         ]
                     
             
