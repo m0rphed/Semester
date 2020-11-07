@@ -63,7 +63,7 @@ module Homework4
         | [] -> []
         | pivot :: tl ->
            let left,right = List.partition (fun x -> x < pivot) tl
-           QuickList left @ [pivot] @ QuickList right
+           QuickList left @ (pivot :: QuickList right)
         QuickList x
 
     let QuickArraySort1 x =
@@ -98,7 +98,8 @@ module Homework4
         | [||] -> [||]
         | x when x.Length < 2 -> x
         | x -> 
-            let left, (right, pivot) = Array.partition (fun i -> i < x.[0]) x |> (fun (right, pivot) -> right, pivot |> Array.partition (fun n -> n <> x.[0]))
+            let left, (right, pivot) = Array.partition (fun i -> i < x.[0]) x |> fun (right, pivot) ->
+                right, pivot |> Array.partition (fun n -> n <> x.[0])
             Array.append (Array.append (_go left) pivot) (_go right)
         _go x
 
@@ -147,11 +148,12 @@ module Homework4
         Packing32to64 (a32, b32)
 
     let Unpacking64to16 (x: int64) =
-        let a = x |> int16
+        let a = int16 x
         let b = x >>> 16 |> int16
         let c = x >>> 32 |> int16
         let d = x >>> 48 |> int16
         (d,c,b,a)
+        
 
      
 
