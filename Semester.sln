@@ -17,6 +17,9 @@ EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoolMatrix", "src\BoolMatrix\BoolMatrix.fsproj", "{17013C92-EC94-4CA9-A8BA-85D193A8178F}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoolMrtxTest", "tests\BoolMatrixForTest.Tests\BoolMrtxTest.fsproj", "{F0E2CA2E-E21D-4BFF-9481-0F5A8BB77757}"
+	ProjectSection(ProjectDependencies) = postProject
+		{17013C92-EC94-4CA9-A8BA-85D193A8178F} = {17013C92-EC94-4CA9-A8BA-85D193A8178F}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
