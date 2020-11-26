@@ -12,10 +12,6 @@ Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Semester.Tests", "tests\Sem
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Sorting", "src\Sorting\Sorting.fsproj", "{B61FA744-1FA1-4CA6-90BA-FFC5C74F6BF7}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Sorting.Tests", "tests\Sorting.Tests\Sorting.Tests.fsproj", "{B363633A-DD5C-422B-BD6C-4A3FA10770C5}"
-EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "TestsForSorting", "src\TestsForSorting\TestsForSorting.fsproj", "{E70FBA97-8448-4E81-A500-406C5CB0BB86}"
-EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoolMatrix", "src\BoolMatrix\BoolMatrix.fsproj", "{17013C92-EC94-4CA9-A8BA-85D193A8178F}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BoolMrtxTest", "tests\BoolMatrixForTest.Tests\BoolMrtxTest.fsproj", "{F0E2CA2E-E21D-4BFF-9481-0F5A8BB77757}"
