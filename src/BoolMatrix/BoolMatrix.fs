@@ -1,4 +1,4 @@
-module BoolMatrix
+module bMatrix
     open System
     open System.IO
     [<Measure>] type Row

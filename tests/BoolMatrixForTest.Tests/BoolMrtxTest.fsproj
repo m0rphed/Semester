@@ -15,7 +15,7 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="../../src/Semester/Semester.fsproj" />
-        <ProjectReference Include="..\..\src\Sorting\Sorting.fsproj" />
+        <ProjectReference Include="..\..\src\BoolMatrix\bMatrix.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

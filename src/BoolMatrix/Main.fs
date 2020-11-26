@@ -1,7 +1,6 @@
 module Main
 open Argu
 open System
-open BoolMatrix
 type CLIArguments =
     | ReadMatrix
     | MultiplyMatrixes
@@ -24,43 +23,43 @@ type CLIArguments =
                 if results.Contains ReadMatrix
                 then
                     let file = Console.ReadLine() 
-                    BoolMatrix.printListofPairs (BoolMatrix.readMatrix file)
+                    bMatrix.printListofPairs (bMatrix.readMatrix file)
                 elif results.Contains MultiplyMatrixes
                 then
                     printfn ("Укажите 3 пути")
                     let t = Console.ReadLine() 
-                    let x = BoolMatrix.readMatrix t
+                    let x = bMatrix.readMatrix t
                     let k = Console.ReadLine() 
-                    let y = BoolMatrix.readMatrix k
+                    let y = bMatrix.readMatrix k
                     let path = Console.ReadLine() 
-                    BoolMatrix.writeOutputMatrix (BoolMatrix.returnMatrix (BoolMatrix.multiplyBool x y)) path
+                    bMatrix.writeOutputMatrix (bMatrix.returnMatrix (bMatrix.multiplyBool x y)) path
                 elif results.Contains MultiplyReal
                 then
                     let t = Console.ReadLine()
-                    let k = BoolMatrix.readMatrixForTests t                   
+                    let k = bMatrix.readMatrixForTests t                   
                     let u = Console.ReadLine()
-                    let o = BoolMatrix.readMatrixForTests u
-                    printfn ("%A") (BoolMatrix.multiply k o)
+                    let o = bMatrix.readMatrixForTests u
+                    printfn ("%A") (bMatrix.multiply k o)
                 elif results.Contains Generator
                 then
                     let k = Console.ReadLine() |> int
                     let n = Console.ReadLine() |> int
                     let t = Console.ReadLine() |> int
-                    let fMatrix = BoolMatrix.generateRandomBoolMatrix (abs n) (abs k)
-                    let sMatrix = BoolMatrix.generateRandomBoolMatrix (abs k) (abs t)
-                    let first = BoolMatrix.returnMatrix (BoolMatrix.multiplyBool (BoolMatrix.createBoolMatrixFromStandart fMatrix) (BoolMatrix.createBoolMatrixFromStandart sMatrix))
+                    let fMatrix = bMatrix.generateRandomBoolMatrix (abs n) (abs k)
+                    let sMatrix = bMatrix.generateRandomBoolMatrix (abs k) (abs t)
+                    let first = bMatrix.returnMatrix (bMatrix.multiplyBool (bMatrix.createBoolMatrixFromStandart fMatrix) (bMatrix.createBoolMatrixFromStandart sMatrix))
                     printfn ("\n %A") first
-                    let second = BoolMatrix.multiply fMatrix sMatrix
+                    let second = bMatrix.multiply fMatrix sMatrix
                     printfn ("\n %A") second
                 elif results.Contains WriteRead
                 then
                     let y = Console.ReadLine() |> int
                     let z = Console.ReadLine() |> int
                     let x = Console.ReadLine()
-                    let u = BoolMatrix.generateRandomBoolMatrix y z
+                    let u = bMatrix.generateRandomBoolMatrix y z
                     printfn ("\n %A") u
-                    BoolMatrix.writeOutputMatrix u x
-                    printfn ("\n %A") (BoolMatrix.returnMatrix (BoolMatrix.readMatrix x))                    
+                    bMatrix.writeOutputMatrix u x
+                    printfn ("\n %A") (bMatrix.returnMatrix (bMatrix.readMatrix x))                    
                 else           
                     parser.PrintUsage() |> printfn "%s"
                 0
