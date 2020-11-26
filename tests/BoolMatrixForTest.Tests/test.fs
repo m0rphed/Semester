@@ -1,7 +1,6 @@
 module test
 open Expecto
 open System
-open BoolMatrix
 [<Tests>]
 let checkEquality =
     testList "test eqaulity"
@@ -31,7 +30,7 @@ let checkSpecific =
            <| fun _ ->
                let first = BoolMatrix.createBoolMatrixFromStandart (BoolMatrix.generateRandomBoolMatrix 0 0)
                let second = BoolMatrix.createBoolMatrixFromStandart (BoolMatrix.generateRandomBoolMatrix 0 0)
-               Expect.equal (BoolMatrix.multiplyBool first second) (Matrix (0, 0, [])) "Needs to be equal"
+               Expect.equal (BoolMatrix.multiplyBool first second) (BoolMatrix.Matrix (0, 0, [])) "Needs to be equal"
            testCase "Input values < 0"
            <| fun _ ->
                Expect.throws (fun _ -> BoolMatrix.generateRandomBoolMatrix -1 -1 |> ignore) "Cannot create matrix" 
