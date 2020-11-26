@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BoolMatrix": {
+      "commandName": "Project",
+      "commandLineArgs": "--generator"
+    }
+  }
+}
