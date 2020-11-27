@@ -1,19 +1,19 @@
 module bMatrix
-    open System
-    open System.IO
-    [<Measure>] type Row
-    [<Measure>] type Col
-    [<Struct>]
-        type Pair =
-            val x: int<Row>
-            val y: int<Col>
-            new (p,q) = {x = p; y = q}
-    [<Struct>]
-        type Matrix =
-            val m: int
-            val n: int
-            val lst: list<Pair>
-            new (k, p, lsts) = {m = k; n = p; lst = lsts}
+open System
+open System.IO
+[<Measure>] type Row
+[<Measure>] type Col
+[<Struct>]
+    type Pair =
+        val x: int<Row>
+        val y: int<Col>
+        new (p,q) = {x = p; y = q}
+[<Struct>]
+    type Matrix =
+        val rows: int
+        val cols: int
+        val lst: list<Pair>
+        new (k, p, lsts) = {rows = k; cols = p; lst = lsts}
             
   (*  let readMatrix file =
         let a = System.IO.File.ReadAllLines file
@@ -57,14 +57,14 @@ module bMatrix
         matrix
 
     let multiplyBool (o: Matrix) (t: Matrix) =
-        if o.n = t.m
+        if o.cols = t.rows
         then
             let ls = List.distinct [for i in 0 .. o.lst.Length - 1 do
                                         for j in 0 .. t.lst.Length - 1 do
                                             if int o.lst.[i].y = int t.lst.[j].x
                                             then Pair(int o.lst.[i].x * 1<Row>, int t.lst.[j].y * 1<Col>)
                                    ]
-            Matrix(o.m, t.n, ls)
+            Matrix(o.rows, t.cols, ls)
         else failwith "Cannot multiply this"
 
     let printListofPairs (x: Matrix) =
@@ -72,12 +72,12 @@ module bMatrix
             printfn ("\n %A, %A") x.lst.[i].x x.lst.[i].y
 
     let returnMatrix (o: Matrix) =
-        if o.m = o.n && o.n < 0
+        if o.rows = o.cols && o.cols < 0
         then failwith "nothing to return"
-        elif o.m = 0 && o.n = 0
+        elif o.rows = 0 && o.cols = 0
         then Array2D.zeroCreate 0 0 
         else
-            let Mtrx = Array2D.zeroCreate o.m o.n
+            let Mtrx = Array2D.zeroCreate o.rows o.cols
             for i in 0 .. o.lst.Length - 1 do
                 Mtrx.[int o.lst.[i].x, int o.lst.[i].y] <- 1
             Mtrx
@@ -117,43 +117,3 @@ module bMatrix
                         arr.[k] <- Pair (i * 1<Row>, j * 1<Col>)
                         k <- k + 1
             Matrix ((Array2D.length1 x), (Array2D.length2 x), List.ofArray arr)
-    //Начиная с этого места идут функции нужные для тест проперти
-    let multiply (o: int[,]) (t: int[,]) =       
-        let I = Array2D.length2 o
-        let J = Array2D.length1 o 
-        let K = Array2D.length1 t 
-        let R = Array2D.length2 t
-        if I = K
-        then
-            let Mtx = Array2D.zeroCreate J R
-            for i in 0 .. J - 1 do 
-                for j in 0 .. R - 1 do 
-                    for k in 0 .. I - 1 do 
-                        Mtx.[i,j] <- Mtx.[i,j] + (t.[k,j] * o.[i,k])
-            for i in 0 .. J - 1 do
-                for j in 0 .. R - 1 do
-                    if abs Mtx.[i,j] > 0
-                    then Mtx.[i,j] <- 1
-            Mtx      
-        else failwith "Cannot multiply this"
-
-    let readMatrixForTests file =
-        let a = System.IO.File.ReadAllLines file
-        if a.Length = 0
-        then failwith "nothing to read"
-        else
-            let mutable k = 0
-            let m = Array2D.zeroCreate a.Length (a.[0].Split ' ').Length 
-            for i = 0 to a.Length - 1 do
-                for j in 0 .. (a.[i].Split ' ').Length - 1 do
-                    m.[i,j] <- int (a.[i].Split ' ').[j]
-            m
-
-    let generateRandomBoolMatrix m n = 
-        let rnd = System.Random()
-        let arr = Array2D.init m n (fun x y -> rnd.Next(0,2))
-        arr
- 
-    
-
-            

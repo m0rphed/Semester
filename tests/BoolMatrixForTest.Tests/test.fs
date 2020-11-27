@@ -1,6 +1,64 @@
 module test
 open Expecto
 open System
+open bMatrix
+let multiply (o: int[,]) (t: int[,]) =       
+    let first = Array2D.length2 o
+    let second = Array2D.length1 o 
+    let third = Array2D.length1 t 
+    let fourth = Array2D.length2 t
+    if first = third
+    then
+        let mtx = Array2D.zeroCreate second fourth
+        for i in 0 .. second - 1 do 
+            for j in 0 .. fourth - 1 do 
+                for k in 0 .. first - 1 do 
+                    mtx.[i,j] <- mtx.[i,j] + (t.[k,j] * o.[i,k])
+        for i in 0 .. second - 1 do
+            for j in 0 .. fourth - 1 do
+                if abs mtx.[i,j] > 0
+                then mtx.[i,j] <- 1
+        mtx      
+    else failwith "Cannot multiply this"
+
+let readMatrixForTests file =
+    let a = System.IO.File.ReadAllLines file
+    if a.Length = 0
+    then failwith "nothing to read"
+    else
+        let mutable k = 0
+        let m = Array2D.zeroCreate a.Length (a.[0].Split ' ').Length 
+        for i = 0 to a.Length - 1 do
+            for j in 0 .. (a.[i].Split ' ').Length - 1 do
+                m.[i,j] <- int (a.[i].Split ' ').[j]
+        m
+
+let generateRandomBoolMatrix m n = 
+    let rnd = System.Random()
+    let arr = Array2D.init m n (fun x y -> rnd.Next(0,2))
+    let firstOutput = arr
+    let createBoolMatrixFromStandart (x: int[,]) =
+        if x.Length = 0
+        then Matrix (0, 0, [])
+        elif x.Length < 0
+        then failwith "Cannot create"
+        else
+            let mutable k = 0
+            for i in 0 .. (Array2D.length1 x) - 1 do
+                for j in 0 .. (Array2D.length2 x) - 1 do
+                    if abs x.[i,j] > 0
+                    then k <- k + 1
+            let arr = Array.init k (fun _ -> Pair (-1<Row>, -1<Col>))
+            k <- 0
+            for i in 0 .. (Array2D.length1 x) - 1  do
+                for j in 0 .. (Array2D.length2 x) - 1 do
+                    if abs x.[i,j] > 0
+                    then
+                        arr.[k] <- Pair (i * 1<Row>, j * 1<Col>)
+                        k <- k + 1
+            Matrix ((Array2D.length1 x), (Array2D.length2 x), List.ofArray arr)
+    (firstOutput, createBoolMatrixFromStandart arr)
+
 [<Tests>]
 let checkEquality =
     testList "test eqaulity"
@@ -9,30 +67,30 @@ let checkEquality =
             <| fun (k: int, n: int, t: int) ->
                 if k <> 0 && n <> 0 && t <> 0
                 then
-                    let fitstGenerate = bMatrix.generateRandomBoolMatrix (abs n) (abs k)
-                    let secondGenerate = bMatrix.generateRandomBoolMatrix (abs k) (abs t)
-                    let first = bMatrix.returnMatrix (bMatrix.multiplyBool (bMatrix.createBoolMatrixFromStandart fitstGenerate) (bMatrix.createBoolMatrixFromStandart secondGenerate))
-                    let second = bMatrix.multiply fitstGenerate secondGenerate
+                    let firstGenerate = generateRandomBoolMatrix (abs n) (abs k)
+                    let secondGenerate = generateRandomBoolMatrix (abs k) (abs t)
+                    let first = returnMatrix (multiplyBool (snd firstGenerate) (snd secondGenerate))
+                    let second = multiply (fst firstGenerate) (fst secondGenerate)
                     Expect.equal first second "Needs to be equal"
             testProperty "test that write and read correctly"
             <| fun (x, y) ->
                 if x > 0 && y > 0
                 then
-                    let f = bMatrix.generateRandomBoolMatrix x y 
-                    bMatrix.writeOutputMatrix f "dasd.txt"
-                    Expect.equal f (bMatrix.returnMatrix (bMatrix.readMatrix "dasd.txt")) "needs to be equal"
+                    let f = generateRandomBoolMatrix x y 
+                    writeOutputMatrix (fst f) "dasd.txt"
+                    Expect.equal (fst f) (returnMatrix (readMatrix "dasd.txt")) "needs to be equal"
         ]
 [<Tests>]
 let checkSpecific =
     testList "tests specific values"
         [
-           testCase "Pustoi massiv"
+           testCase "empty array(traslit top imho)"
            <| fun _ ->
-               let first = bMatrix.createBoolMatrixFromStandart (bMatrix.generateRandomBoolMatrix 0 0)
-               let second = bMatrix.createBoolMatrixFromStandart (bMatrix.generateRandomBoolMatrix 0 0)
-               Expect.equal (bMatrix.multiplyBool first second) (bMatrix.Matrix (0, 0, [])) "Needs to be equal"
+               let first = generateRandomBoolMatrix 0 0
+               let second = generateRandomBoolMatrix 0 0
+               Expect.equal (bMatrix.multiplyBool (snd first) (snd second)) (Matrix (0, 0, [])) "Needs to be equal"
            testCase "Input values < 0"
            <| fun _ ->
-               Expect.throws (fun _ -> bMatrix.generateRandomBoolMatrix -1 -1 |> ignore) "Cannot create matrix" 
+               Expect.throws (fun _ -> (fst (generateRandomBoolMatrix -1 -1)) |> ignore) "Cannot create matrix" 
         ]
 
