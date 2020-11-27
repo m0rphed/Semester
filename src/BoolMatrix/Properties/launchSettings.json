@@ -2,7 +2,7 @@
   "profiles": {
     "BoolMatrix": {
       "commandName": "Project",
-      "commandLineArgs": "--readmatrix"
+      "commandLineArgs": "--multiplymatrixes"
     }
   }
 }

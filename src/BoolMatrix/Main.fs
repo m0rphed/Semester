@@ -2,6 +2,7 @@ module Main
 open Argu
 open System
 open bMatrix
+
 type CLIArguments =
     | ReadMatrix
     | MultiplyMatrixes
@@ -26,7 +27,7 @@ type CLIArguments =
                     let x = readMatrix t
                     let k = Console.ReadLine() 
                     let y = readMatrix k
-                    let path = Console.ReadLine() 
+                    let path = Console.ReadLine()
                     writeOutputMatrix (returnMatrix (multiplyBool x y)) path                              
                 else           
                     parser.PrintUsage() |> printfn "%s"

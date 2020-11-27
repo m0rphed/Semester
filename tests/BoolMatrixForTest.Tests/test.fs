@@ -2,6 +2,7 @@ module test
 open Expecto
 open System
 open bMatrix
+
 let multiply (o: int[,]) (t: int[,]) =       
     let first = Array2D.length2 o
     let second = Array2D.length1 o 
@@ -20,18 +21,6 @@ let multiply (o: int[,]) (t: int[,]) =
                 then mtx.[i,j] <- 1
         mtx      
     else failwith "Cannot multiply this"
-
-let readMatrixForTests file =
-    let a = System.IO.File.ReadAllLines file
-    if a.Length = 0
-    then failwith "nothing to read"
-    else
-        let mutable k = 0
-        let m = Array2D.zeroCreate a.Length (a.[0].Split ' ').Length 
-        for i = 0 to a.Length - 1 do
-            for j in 0 .. (a.[i].Split ' ').Length - 1 do
-                m.[i,j] <- int (a.[i].Split ' ').[j]
-        m
 
 let generateRandomBoolMatrix m n = 
     let rnd = System.Random()
@@ -84,11 +73,11 @@ let checkEquality =
 let checkSpecific =
     testList "tests specific values"
         [
-           testCase "empty array(traslit top imho)"
+           testCase "empty "
            <| fun _ ->
                let first = generateRandomBoolMatrix 0 0
                let second = generateRandomBoolMatrix 0 0
-               Expect.equal (bMatrix.multiplyBool (snd first) (snd second)) (Matrix (0, 0, [])) "Needs to be equal"
+               Expect.equal (multiplyBool (snd first) (snd second)) (Matrix (0, 0, [])) "Needs to be equal"
            testCase "Input values < 0"
            <| fun _ ->
                Expect.throws (fun _ -> (fst (generateRandomBoolMatrix -1 -1)) |> ignore) "Cannot create matrix" 
