@@ -13,8 +13,8 @@ type Pair =
 type Matrix =
     val numOfRows: int
     val numOfCols: int
-    val lst: list<Pair>
-    new (k, p, lsts) = {numOfRows = k; numOfCols = p; lst = lsts}
+    val notEmptyData: list<Pair>
+    new (k, p, lsts) = {numOfRows = k; numOfCols = p; notEmptyData = lsts}
             
 let readMatrix file =
     let processLine (str: string) (i, lst) =
@@ -39,17 +39,17 @@ let readMatrix file =
 let multiplyBool (o: Matrix) (t: Matrix) =
     if o.numOfCols = t.numOfRows
     then
-        let ls = List.distinct [for i in 0 .. o.lst.Length - 1 do
-                                    for j in 0 .. t.lst.Length - 1 do
-                                        if int o.lst.[i].y = int t.lst.[j].x
-                                        then Pair(int o.lst.[i].x * 1<Row>, int t.lst.[j].y * 1<Col>)
+        let ls = List.distinct [for i in 0 .. o.notEmptyData.Length - 1 do
+                                    for j in 0 .. t.notEmptyData.Length - 1 do
+                                        if int o.notEmptyData.[i].y = int t.notEmptyData.[j].x
+                                        then Pair(int o.notEmptyData.[i].x * 1<Row>, int t.notEmptyData.[j].y * 1<Col>)
                                 ]
         Matrix(o.numOfRows, t.numOfCols, ls)
     else failwith "Cannot multiply this"
 
 let printListofPairs (x: Matrix) =
-    for i in 0 .. x.lst.Length - 1 do
-        printfn ("\n %A, %A") x.lst.[i].x x.lst.[i].y
+    for i in 0 .. x.notEmptyData.Length - 1 do
+        printfn ("\n %A, %A") x.notEmptyData.[i].x x.notEmptyData.[i].y
 
 let returnMatrix (o: Matrix) =
     if o.numOfRows = o.numOfCols && o.numOfCols < 0
@@ -58,8 +58,8 @@ let returnMatrix (o: Matrix) =
     then Array2D.zeroCreate 0 0 
     else
         let mtrx = Array2D.zeroCreate o.numOfRows o.numOfCols
-        for i in 0 .. o.lst.Length - 1 do
-            mtrx.[int o.lst.[i].x, int o.lst.[i].y] <- 1
+        for i in 0 .. o.notEmptyData.Length - 1 do
+            mtrx.[int o.notEmptyData.[i].x, int o.notEmptyData.[i].y] <- 1
         mtrx
 
 let writeOutputMatrix (o: int[,]) path =

@@ -3,7 +3,7 @@ open Expecto
 open System
 open bMatrix
 
-let multiply (o: int[,]) (t: int[,]) =       
+let multiply (o: int[,]) (t: int[,]) =
     let first = Array2D.length2 o
     let second = Array2D.length1 o 
     let third = Array2D.length1 t 
@@ -22,7 +22,7 @@ let multiply (o: int[,]) (t: int[,]) =
         mtx      
     else failwith "Cannot multiply this"
 
-let generateRandomBoolMatrix m n = 
+let generateRandomBoolAndDefoltMtx m n = 
     let rnd = System.Random()
     let arr = Array2D.init m n (fun x y -> rnd.Next(0,2))
     let firstOutput = arr
@@ -56,8 +56,8 @@ let checkEquality =
             <| fun (k: int, n: int, t: int) ->
                 if k <> 0 && n <> 0 && t <> 0
                 then
-                    let firstGenerate = generateRandomBoolMatrix (abs n) (abs k)
-                    let secondGenerate = generateRandomBoolMatrix (abs k) (abs t)
+                    let firstGenerate = generateRandomBoolAndDefoltMtx (abs n) (abs k)
+                    let secondGenerate = generateRandomBoolAndDefoltMtx (abs k) (abs t)
                     let first = returnMatrix (multiplyBool (snd firstGenerate) (snd secondGenerate))
                     let second = multiply (fst firstGenerate) (fst secondGenerate)
                     Expect.equal first second "Needs to be equal"
@@ -65,7 +65,7 @@ let checkEquality =
             <| fun (x, y) ->
                 if x > 0 && y > 0
                 then
-                    let f = generateRandomBoolMatrix x y 
+                    let f = generateRandomBoolAndDefoltMtx x y 
                     writeOutputMatrix (fst f) "dasd.txt"
                     Expect.equal (fst f) (returnMatrix (readMatrix "dasd.txt")) "needs to be equal"
         ]
@@ -75,11 +75,11 @@ let checkSpecific =
         [
            testCase "empty "
            <| fun _ ->
-               let first = generateRandomBoolMatrix 0 0
-               let second = generateRandomBoolMatrix 0 0
+               let first = generateRandomBoolAndDefoltMtx 0 0
+               let second = generateRandomBoolAndDefoltMtx 0 0
                Expect.equal (multiplyBool (snd first) (snd second)) (Matrix (0, 0, [])) "Needs to be equal"
            testCase "Input values < 0"
            <| fun _ ->
-               Expect.throws (fun _ -> (fst (generateRandomBoolMatrix -1 -1)) |> ignore) "Cannot create matrix" 
+               Expect.throws (fun _ -> (fst (generateRandomBoolAndDefoltMtx -1 -1)) |> ignore) "Cannot create matrix" 
         ]
 
