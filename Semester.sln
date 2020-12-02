@@ -6,14 +6,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C397A34C-84F
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Semester", "src\Semester\Semester.fsproj", "{5D30E174-2538-47AC-8443-318C8C5DC2C9}"
 EndProject
-Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Sorting.Tests", "tests\Sorting.Tests\Sorting.Tests.fsproj", "{B363633A-DD5C-422B-BD6C-4A3FA10770C5}"
-
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{ACBEE43C-7A88-4FB1-9B06-DB064D22B29F}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Semester.Tests", "tests\Semester.Tests\Semester.Tests.fsproj", "{1CA2E092-2320-451D-A4F0-9ED7C7C528CA}"
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Sorting", "src\Sorting\Sorting.fsproj", "{B61FA744-1FA1-4CA6-90BA-FFC5C74F6BF7}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "Sorting.Tests", "tests\Sorting.Tests\Sorting.Tests.fsproj", "{B363633A-DD5C-422B-BD6C-4A3FA10770C5}"
+
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "bMatrix", "src\BoolMatrix\bMatrix.fsproj", "{17013C92-EC94-4CA9-A8BA-85D193A8178F}"
 EndProject
