@@ -2,6 +2,7 @@ module Main
 open Listik  
 open Argu
 open System
+open Tree
 
 type CLIArguments =
     | FuncToMyList
@@ -10,7 +11,7 @@ type CLIArguments =
         member s.Usage =
             match s with
             | FuncToMyList _ -> "functions to my list"
-            | FuncMyStringMyTree _ -> "functions to my string and tree"           
+            | FuncMyStringMyTree _ -> "functions to my string and tree"
 [<EntryPoint>]
     let main (argv: string array) =
         try
@@ -67,18 +68,18 @@ type CLIArguments =
                     printfn "И обратно %A" (fromStringToMyString (fromMyStringToString y))
                 elif x = 3
                 then
-                     let mTree = (Node ((SomeMeasures.Int 100000), Cons (Node (SomeMeasures.Int 15, One (Leaf (SomeMeasures.Int 100))),One (Node (SomeMeasures.Int 5000, One (Leaf (SomeMeasures.Int 50000)))))))
-                     let sMTree = (Node ((SomeMeasures.Int 15), Cons ((Leaf (SomeMeasures.Int 13)), One (Leaf (SomeMeasures.Int 10)))))
+                     let mTree =(Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
+                     let sMTree = (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))
                      printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
                      printfn "Среднее значение у первого равно: %A" (avgMyTree mTree)
                      printfn "Среднее значение у первого равно: %A" (avgMyTree sMTree)
                 elif x = 4
                 then
-                    let mTree = (Node ((SomeMeasures.Int 100000), Cons (Node (SomeMeasures.Int 15, One (Leaf (SomeMeasures.Int 100))),One (Node (SomeMeasures.Int 5000, One (Leaf (SomeMeasures.Int 50000)))))))
-                    let sMTree = (Node ((SomeMeasures.Int 15), Cons ((Leaf (SomeMeasures.Int 13)), One (Leaf (SomeMeasures.Int 10)))))
+                    let mTree = (Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
+                    let sMTree = (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))
                     printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
                     printfn "Максимальное значение у первого равно: %A" (maxInMyTree mTree)
-                    printfn "Максимальное значение у первого равно: %A" (maxInMyTree sMTree)              
+                    printfn "Максимальное значение у первого равно: %A" (maxInMyTree sMTree)
             else 
                 parser.PrintUsage() |> printfn "%s"
             0

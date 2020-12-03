@@ -1,6 +1,7 @@
 module exeTest
 open Expecto
 open Listik
+open Tree
 
 [<Tests>]
 let firstPackTest =
@@ -56,11 +57,11 @@ let secondTest =
 
             testCase "avgTree"
             <| fun _ ->
-                Expect.equal (avgMyTree (Node ((SomeMeasures.Int 15), Cons ((Leaf (SomeMeasures.Int 13)), One (Leaf (SomeMeasures.Int 10)))))) 12 "38 / 3 = 12"
+                Expect.equal (avgMyTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
 
             testCase "maxInTree"
             <| fun _ ->
-                Expect.equal (maxInMyTree (Node ((SomeMeasures.Int 15), Cons ((Leaf (SomeMeasures.Int 13)), One (Leaf (SomeMeasures.Int 10)))))) 15 "max is 15 in tree"
+                Expect.equal (maxInMyTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 15 "max is 15 in tree"
            
             testCase "map"
             <| fun _ ->

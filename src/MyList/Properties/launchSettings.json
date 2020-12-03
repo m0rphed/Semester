@@ -2,7 +2,7 @@
   "profiles": {
     "MyList": {
       "commandName": "Project",
-      "commandLineArgs": "--funcmystringmytree"
+      "commandLineArgs": "--functomylist"
     }
   }
 }
