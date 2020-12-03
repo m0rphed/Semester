@@ -68,14 +68,14 @@ type CLIArguments =
                     printfn "И обратно %A" (toMyString (toString y))
                 elif x = 3
                 then
-                     let mTree =(Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
+                     let mTree =(Node ((-200), Cons (Node (-100000, One (Leaf (-500))),One (Node ((100000), Cons (Node (105, One (Leaf (200))),One (Node (1, One (Leaf (6))))))))))
                      let sMTree = (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))
                      printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
-                     printfn "Среднее значение у первого равно: %A" (avgMyTree mTree)
-                     printfn "Среднее значение у первого равно: %A" (avgMyTree sMTree)
+                     printfn "Среднее значение у первого равно: %A" (avgTree mTree)
+                     printfn "Среднее значение у первого равно: %A" (avgTree sMTree)
                 elif x = 4
                 then
-                    let mTree = (Node ((-2), Cons (Node (-3, One (Leaf (-4))),One (Node (-5, One (Leaf (-7)))))))
+                    let mTree = (Node ((100), Cons (Node (101, One (Leaf (102))),One (Node (103, One (Leaf (2)))))))
                     let sMTree = (Node ((-100), Cons ((Leaf (-1)), One (Leaf (10)))))
                     printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
                     printfn "Максимальное значение у первого равно: %A" (maxInTree mTree)

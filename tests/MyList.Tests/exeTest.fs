@@ -82,11 +82,11 @@ let secondTest =
 
             testCase "avgTree1"
             <| fun _ ->
-                Expect.equal (avgMyTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
+                Expect.equal (avgTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
 
             testCase "avgTree2"
             <| fun _ ->
-                Expect.equal (avgMyTree (Node ((1), Cons ((Leaf (2)), One (Leaf (3)))))) 2 "6 / 3 = 2"
+                Expect.equal (avgTree (Node ((1), Cons ((Leaf (2)), One (Leaf (3)))))) 2 "6 / 3 = 2"
 
             testCase "maxInTree1"
             <| fun _ ->

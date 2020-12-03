@@ -5,26 +5,18 @@ type MyTree<'t> =
     | Leaf of 't
     | Node of 't * MyList<MyTree<'t>>
 
-let avgMyTree x =
+let avgTree x =
     let rec _go acc x =
         match x with
-        | Leaf t -> acc + t 
+        | Leaf t -> acc + t  
         | Node (hd, tl) ->
-            let rec _go1 count tl = 
-                match tl with
-                | One t -> _go acc t + count
-                | Cons (t, k) -> _go1 (count + _go acc t)  k
-            _go1 hd tl
-    let rec _go2 acc x =
+            fold (fun acc1 elem -> acc1 + _go acc elem) hd tl   
+    let rec _go1 acc x =
         match x with
         | Leaf t -> acc + 1
         | Node (hd, tl) ->
-            let rec _go1 count tl = 
-                match tl with
-                | One t -> _go2 acc t + count
-                | Cons (t, k) -> _go1 (count + _go2 acc t)  k
-            _go1 1 tl
-    (_go 0 x) / (_go2 0 x)
+            fold (fun acc1 elem -> acc1 + _go1 acc elem) 1 tl
+    (_go 0 x) / (_go1 0 x)
 
 let maxInTree x =
     let rec _go acc x =
@@ -34,16 +26,6 @@ let maxInTree x =
             then acc
             else t
         | Node (hd, tl) ->
-            let rec _go1 el tl = 
-                match tl with
-                | One t ->
-                    if acc > el
-                    then _go acc t
-                    else _go el t 
-                | Cons (t, k) ->
-                    if acc > el
-                    then _go1 (_go acc t) k
-                    else _go1 (_go el t) k  
-            _go1 hd tl
+             fold (fun acc1 elem -> _go (max acc1 acc) elem) hd tl
     _go System.Int32.MinValue x 
 
