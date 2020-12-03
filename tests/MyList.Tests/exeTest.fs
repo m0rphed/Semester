@@ -19,7 +19,7 @@ let firstPackTest =
                 if abs k >= 1
                 then
                     let commonList = List.init (abs k) (fun _ -> System.Random().Next())
-                    Expect.sequenceEqual (toDefoltList (toMyList commonList)) commonList "needs to be equal"
+                    Expect.equal (toDefoltList (toMyList commonList)) commonList "needs to be equal"
 
             testProperty "Check length id"
             <| fun (k: int) ->
@@ -47,29 +47,80 @@ let firstPackTest =
 let secondTest =
     testList "testcases"
         [
+
+            testProperty "checks equivivalent list and MyList1"
+            <| fun _ ->
+                let myList = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
+                Expect.equal (toMyList (toDefoltList myList)) (Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))) "needs to be equal"
+
+            testProperty "checks equivivalent list and MyList2"
+            <| fun _ ->
+                let lst = [1;2;3;4;5;6;7]
+                Expect.equal (toDefoltList (toMyList lst)) [1;2;3;4;5;6;7] "needs to be equal"
+
+            testProperty "check length"
+            <| fun _ ->
+                let lst = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
+                Expect.equal (length lst) 6 "needs to be equal"
+
+            testProperty "check sort"
+                <| fun _ ->
+                    let myList = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
+                    Expect.equal (sort myList) (Cons (0, Cons (1, Cons (2, Cons (3, Cons (4, One 5)))))) "needs to be equal"
+
             testCase "stringToMyString"
             <| fun _ ->
                 Expect.equal "привет" (toString (toMyString "привет")) "need to be equal"
 
-            testCase "string concat"
+            testCase "string concat1"
             <| fun _ ->
                 Expect.equal ("привет" + " Андрей") (toString (concatMyString (toMyString "привет") (toMyString " Андрей"))) "Needs to be equal"
 
-            testCase "avgTree"
+            testCase "string concat2"
+            <| fun _ ->
+                Expect.equal (" " + " ") (toString (concatMyString (toMyString " ") (toMyString " "))) "Needs to be equal"
+
+            testCase "avgTree1"
             <| fun _ ->
                 Expect.equal (avgMyTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
 
-            testCase "maxInTree"
+            testCase "avgTree2"
+            <| fun _ ->
+                Expect.equal (avgMyTree (Node ((1), Cons ((Leaf (2)), One (Leaf (3)))))) 2 "6 / 3 = 2"
+
+            testCase "maxInTree1"
             <| fun _ ->
                 Expect.equal (maxInTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 15 "max is 15 in tree"
+
+            testCase "maxInTree2"
+            <| fun _ ->
+                Expect.equal (maxInTree (Node ((-100), Cons ((Leaf (-13)), One (Leaf (-10)))))) -10 "max is -10 in tree"
            
             testCase "map"
             <| fun _ ->
                 let myList = generator 5
-                Expect.equal (List.map ((+) 2) (toDefoltList myList)) (toDefoltList (map ((+) 2) myList)) "needs to be equal"    
+                Expect.equal (List.map ((+) 2) (toDefoltList myList)) (toDefoltList (map ((+) 2) myList)) "needs to be equal"
+
+            testCase "map1"
+            <| fun _ ->
+                let myList = generator 5
+                Expect.equal (List.map ((*) 2) (toDefoltList myList)) (toDefoltList (map ((*) 2) myList)) "needs to be equal" 
    
+            testCase "iter1"
+            <| fun _ ->
+                let myList = generator 5
+                let mutable acc = 0
+                let mutable acc1 = 0
+                List.iter (fun elem -> acc <- acc + elem) (toDefoltList myList)
+                iter (fun elem -> acc1 <- acc1 + elem) myList
+                Expect.equal acc acc1 "needs to be equal"
+
             testCase "iter"
             <| fun _ ->
                 let myList = generator 5
-                Expect.equal (List.iter (printfn "%A") (toDefoltList myList)) (iter (printfn "%A") myList) "needs to be equal"
+                let mutable acc = 0
+                let mutable acc1 = 0
+                List.iter (fun elem -> acc <- acc - elem) (toDefoltList myList)
+                iter (fun elem -> acc1 <- acc1 - elem) myList
+                Expect.equal acc acc1 "needs to be equal"
         ]

@@ -25,11 +25,11 @@ let generator t =
     _go t (One (System.Random().Next()))
 
 let concat x y =
-    let rec concat x y =
+    let rec _go x y =
         match x with
         | One t -> Cons (t, y)
-        | Cons (i, o) -> Cons (i, concat o y)
-    concat x y
+        | Cons (i, o) -> Cons (i, _go o y)
+    _go x y
 
 let sort x = 
     let rec _go x =
@@ -52,7 +52,7 @@ let iter f x =
         | Cons (i, o) ->
             f i
             _go o
-    _go x  
+    _go x
 
 let map f x =
     let rec _go x =
