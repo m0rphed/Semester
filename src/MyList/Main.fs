@@ -21,34 +21,34 @@ type CLIArguments =
             then
                 printfn "Итак, есть несколько функций, какую протестировать? \n 1) Length \n 2) Concat \n 3) Sort \n 4) Iter \n 5) Map \n 6) ConvertToList " 
                 let x = Console.ReadLine() |> int
-                let myList = generatorMyList 5
+                let myList = generator 5
                 if x = 1
                 then
                     printfn "Вот такой листик сгенерировался %A" myList
                     printfn "Длина равна: %A" (length myList)
                 elif x = 2
                 then
-                    let myList1 = generatorMyList 5 
-                    printfn "Вот такой первый листик сгенерировался %A" myList1
-                    printfn "Вот такой второй листик сгенерировался %A" myList
-                    printfn "Сконкатенированный лист: \n %A" (concatMyList myList myList1)
+                    let myList1 = generator 5 
+                    printfn "Вот такой первый листик сгенерировался %A" myList
+                    printfn "Вот такой второй листик сгенерировался %A" myList1
+                    printfn "Сконкатенированный лист: \n %A" (concat myList myList1)
                 elif x = 3
                 then
                     printfn "Вот такой листик сгенерировался %A" myList
-                    printfn "Отсортируем лист \n %A" (sortForMyList myList)
+                    printfn "Отсортируем лист \n %A" (sort myList)
                 elif x = 4
                 then
                     printfn "Вот такой листик сгенерировался %A" myList
                     printfn "выпишем все элементы"
-                    (iterMyList (printfn "%A") myList)
+                    (iter (printfn "%A") myList)
                 elif x = 5
                 then
                     printfn "Вот такой листик сгенерировался %A" myList
-                    printfn "Прибавим 2 к каждому элементу и выведем новый лист \n %A" (mapMyList ((+) 2) myList)
+                    printfn "Прибавим 2 к каждому элементу и выведем новый лист \n %A" (map ((+) 2) myList)
                 elif x = 6
                 then
                     printfn "Вот такой листик сгенерировался %A" myList
-                    printfn "Сконвертим в лист \n %A" (fromMyListtoStandart myList)
+                    printfn "Сконвертим в лист \n %A" (toDefoltList myList)
             elif results.Contains FuncMyStringMyTree
             then          
                 printfn "Итак, есть несколько функций, какую попробовать? \n 1) Concat \n 2) FromMyStringToString,FromStringToMyString \n 3) AverageInMyTree \n 4) MaxIntMyTree "
@@ -64,8 +64,8 @@ type CLIArguments =
                 then
                     let y = Cons ('п', Cons ('р', Cons ('и', Cons ('в', Cons ('е', One 'т')))))
                     printfn "Допустим есть такой MyList : \n %A" y
-                    printfn "Переведем в строку %A" (fromMyStringToString y)
-                    printfn "И обратно %A" (fromStringToMyString (fromMyStringToString y))
+                    printfn "Переведем в строку %A" (toString y)
+                    printfn "И обратно %A" (toMyString (toString y))
                 elif x = 3
                 then
                      let mTree =(Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
@@ -78,8 +78,8 @@ type CLIArguments =
                     let mTree = (Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
                     let sMTree = (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))
                     printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
-                    printfn "Максимальное значение у первого равно: %A" (maxInMyTree mTree)
-                    printfn "Максимальное значение у первого равно: %A" (maxInMyTree sMTree)
+                    printfn "Максимальное значение у первого равно: %A" (maxInTree mTree)
+                    printfn "Максимальное значение у первого равно: %A" (maxInTree sMTree)
             else 
                 parser.PrintUsage() |> printfn "%s"
             0

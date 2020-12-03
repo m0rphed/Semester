@@ -14,7 +14,7 @@ let rec fold f acc x =
 let length x =
     fold (fun acc elem -> acc +  1) 0 x 
 
-let generatorMyList t =
+let generator t =
     if t < 1
     then failwith "MyList cannot be created because input values uncorrect"
     else
@@ -24,14 +24,14 @@ let generatorMyList t =
         | x -> _go (acc - 1) (Cons (System.Random().Next(),x))
     _go t (One (System.Random().Next()))
 
-let concatMyList x y =
+let concat x y =
     let rec concat x y =
         match x with
         | One t -> Cons (t, y)
         | Cons (i, o) -> Cons (i, concat o y)
     concat x y
 
-let sortForMyList x =
+let sort x = 
     let rec _go x =
         match x with
         | One t -> x
@@ -45,7 +45,7 @@ let sortForMyList x =
         | _ -> _go1 (_go x) (k + 1)
     _go1 (_go x) 0
         
-let iterMyList f x =  
+let iter f x =  
     let rec _go x =
         match x with
         | One t -> f t
@@ -54,14 +54,14 @@ let iterMyList f x =
             _go o
     _go x  
 
-let mapMyList f x =
+let map f x =
     let rec _go x =
         match x with
         | One t -> One (f t)
         | Cons (i, o) -> Cons (f i, _go o)
     _go x
 
-let fromStandartToMyList x =
+let toMyList x = 
     if List.length x < 1
     then failwith "use correct list"
     else
@@ -72,7 +72,7 @@ let fromStandartToMyList x =
             | hd :: tl -> _go (Cons (hd, acc)) tl
         _go (One y.[0]) (y.Tail)
 
-let fromMyListtoStandart x =    
+let toDefoltList x =    
     let rec _go acc x =
         match x with
         | One t -> t :: acc
@@ -80,13 +80,13 @@ let fromMyListtoStandart x =
     List.rev (_go [] x)
 
 let concatMyString (x: MyString) (y: MyString) =
-    (concatMyList x y): MyString 
+    (concat x y): MyString 
 
-let fromStringToMyString (str: string) =
+let toMyString (str: string) =
     let k = [for i in str -> i]
-    fromStandartToMyList k:MyString
+    toMyList k:MyString
 
-let fromMyStringToString x =
+let toString x =
     let rec _go (acc: string) (x: MyString) =
         match x with
         | One t -> acc + string t 

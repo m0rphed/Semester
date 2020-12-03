@@ -26,7 +26,7 @@ let avgMyTree x =
             _go1 1 tl
     (_go 0 x) / (_go2 0 x)
 
-let maxInMyTree x =
+let maxInTree x =
     let rec _go acc x =
         match x with
         | Leaf t ->
