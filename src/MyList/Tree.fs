@@ -45,5 +45,5 @@ let maxInTree x =
                     then _go1 (_go acc t) k
                     else _go1 (_go el t) k  
             _go1 hd tl
-    _go 0 x 
+    _go System.Int32.MinValue x 
 

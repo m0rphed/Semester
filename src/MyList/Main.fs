@@ -75,8 +75,8 @@ type CLIArguments =
                      printfn "Среднее значение у первого равно: %A" (avgMyTree sMTree)
                 elif x = 4
                 then
-                    let mTree = (Node ((100000), Cons (Node (15, One (Leaf (100))),One (Node (5000, One (Leaf (50000)))))))
-                    let sMTree = (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))
+                    let mTree = (Node ((-2), Cons (Node (-3, One (Leaf (-4))),One (Node (-5, One (Leaf (-7)))))))
+                    let sMTree = (Node ((-100), Cons ((Leaf (-1)), One (Leaf (10)))))
                     printfn "Пусть у нас есть два таких дерева \n %A \n %A" mTree sMTree
                     printfn "Максимальное значение у первого равно: %A" (maxInTree mTree)
                     printfn "Максимальное значение у первого равно: %A" (maxInTree sMTree)
