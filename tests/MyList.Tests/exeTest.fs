@@ -41,29 +41,55 @@ let firstPackTest =
                 if abs k >= 1
                 then
                     let myList = generator (abs k)
-                    Expect.equal ((List.sort (toDefoltList myList))) (toDefoltList (sort myList)) "needs to be equal"      
+                    Expect.equal ((List.sort (toDefoltList myList))) (toDefoltList (sort myList)) "needs to be equal"
+
+            testProperty "Check iter id"
+            <| fun (k: int) ->
+                if abs k >= 1
+                then
+                    let myList = generator (abs k)
+                    let mutable acc = 0
+                    let mutable acc1 = 0
+                    List.iter (fun elem -> acc <- acc + elem) (toDefoltList myList)
+                    iter (fun elem -> acc1 <- acc1 + elem) myList
+                    Expect.equal acc acc1 "needs to be eqaul"
+
+            testProperty "Check map id"
+            <| fun (k: int) ->
+                if abs k >= 1
+                then
+                    let genList = generator (abs k)
+                    let myList = map ((+) 2) genList
+                    let defList = List.map ((+) 2) (toDefoltList genList)                  
+                    Expect.equal myList (toMyList defList) "needs to be equal"
+
+            testProperty "Check toMyString and toString id "
+            <| fun (str: string) ->
+                if not (System.String.IsNullOrEmpty str) 
+                then                    
+                    Expect.equal (toString (toMyString str)) str "needs to be equal"
         ]
 [<Tests>]
 let secondTest =
     testList "testcases"
         [
 
-            testProperty "checks equivivalent list and MyList1"
+            testCase "checks equivivalent list and MyList1"
             <| fun _ ->
                 let myList = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
                 Expect.equal (toMyList (toDefoltList myList)) (Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))) "needs to be equal"
 
-            testProperty "checks equivivalent list and MyList2"
+            testCase "checks equivivalent list and MyList2"
             <| fun _ ->
                 let lst = [1;2;3;4;5;6;7]
                 Expect.equal (toDefoltList (toMyList lst)) [1;2;3;4;5;6;7] "needs to be equal"
 
-            testProperty "check length"
+            testCase "check length"
             <| fun _ ->
                 let lst = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
                 Expect.equal (length lst) 6 "needs to be equal"
 
-            testProperty "check sort"
+            testCase "check sort"
                 <| fun _ ->
                     let myList = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
                     Expect.equal (sort myList) (Cons (0, Cons (1, Cons (2, Cons (3, Cons (4, One 5)))))) "needs to be equal"
@@ -82,19 +108,19 @@ let secondTest =
 
             testCase "avgTree1"
             <| fun _ ->
-                Expect.equal (avgTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
+                Expect.equal (average (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 12 "38 / 3 = 12"
 
             testCase "avgTree2"
             <| fun _ ->
-                Expect.equal (avgTree (Node ((1), Cons ((Leaf (2)), One (Leaf (3)))))) 2 "6 / 3 = 2"
+                Expect.equal (average (Node ((1), Cons ((Leaf (2)), One (Leaf (3)))))) 2 "6 / 3 = 2"
 
             testCase "maxInTree1"
             <| fun _ ->
-                Expect.equal (maxInTree (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 15 "max is 15 in tree"
+                Expect.equal (max (Node ((15), Cons ((Leaf (13)), One (Leaf (10)))))) 15 "max is 15 in tree"
 
             testCase "maxInTree2"
             <| fun _ ->
-                Expect.equal (maxInTree (Node ((-100), Cons ((Leaf (-13)), One (Leaf (-10)))))) -10 "max is -10 in tree"
+                Expect.equal (max (Node ((-100), Cons ((Leaf (-13)), One (Leaf (-10)))))) -10 "max is -10 in tree"
            
             testCase "map"
             <| fun _ ->

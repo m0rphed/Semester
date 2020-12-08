@@ -44,22 +44,18 @@ let sort x =
         | k when (k = length x) -> x
         | _ -> _go1 (_go x) (k + 1)
     _go1 (_go x) 0
-        
-let iter f x =  
-    let rec _go x =
-        match x with
-        | One t -> f t
-        | Cons (i, o) ->
-            f i
-            _go o
-    _go x
+           
+let rec iter f x =
+    match x with
+    | One t -> f t
+    | Cons (i, o) ->
+        f i
+        iter f o
 
-let map f x =
-    let rec _go x =
-        match x with
-        | One t -> One (f t)
-        | Cons (i, o) -> Cons (f i, _go o)
-    _go x
+let rec map f x =
+    match x with
+    | One t -> One (f t)
+    | Cons (i, o) -> Cons (f i, map f o)
 
 let toMyList x = 
     if List.length x < 1
@@ -72,12 +68,8 @@ let toMyList x =
             | hd :: tl -> _go (Cons (hd, acc)) tl
         _go (One y.[0]) (y.Tail)
 
-let toDefoltList x =    
-    let rec _go acc x =
-        match x with
-        | One t -> t :: acc
-        | Cons (hd, tl) -> _go (hd :: acc) tl
-    List.rev (_go [] x)
+let toDefoltList x =        
+    List.rev (fold (fun acc elem -> elem :: acc) [] x)
 
 let concatMyString (x: MyString) (y: MyString) =
     (concat x y): MyString 
@@ -86,10 +78,6 @@ let toMyString (str: string) =
     let k = [for i in str -> i]
     toMyList k:MyString
 
-let toString x =
-    let rec _go (acc: string) (x: MyString) =
-        match x with
-        | One t -> acc + string t 
-        | Cons (hd, tl) -> _go (acc + string hd) tl
-    (_go "" x)
+let toString (x: MyString) =
+    fold (fun acc elem -> acc + string elem) "" x
    
