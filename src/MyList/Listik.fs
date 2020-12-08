@@ -12,24 +12,27 @@ let rec fold f acc x =
     | Cons (hd, tl) -> fold f (f acc hd) tl
     
 let length x =
-    fold (fun acc elem -> acc +  1) 0 x 
+    fold (fun acc elem -> acc +  1) 0 x
+
+let toMyList x = 
+    if List.length x < 1
+    then failwith "use correct list"
+    else
+        let y = List.rev x
+        List.fold (fun acc elem -> if x = [] then acc else Cons (elem, acc)) (One y.[0]) (y.Tail)
+
+let  toDefoltList x =        
+    List.rev (fold (fun acc elem -> elem :: acc) [] x)
 
 let generator t =
     if t < 1
     then failwith "MyList cannot be created because input values uncorrect"
-    else
-    let rec _go acc x =
-        match x with
-        | x when (length x) = t -> x
-        | x -> _go (acc - 1) (Cons (System.Random().Next(),x))
-    _go t (One (System.Random().Next()))
+    else (toMyList (List.init t (fun _ -> System.Random().Next())))
 
-let concat x y =
-    let rec _go x y =
-        match x with
-        | One t -> Cons (t, y)
-        | Cons (i, o) -> Cons (i, _go o y)
-    _go x y
+let rec concat x y =
+    match x with
+    | One t -> Cons (t, y)
+    | Cons (i, o) -> Cons (i, concat o y)
 
 let sort x = 
     let rec _go x =
@@ -57,20 +60,6 @@ let rec map f x =
     | One t -> One (f t)
     | Cons (i, o) -> Cons (f i, map f o)
 
-let toMyList x = 
-    if List.length x < 1
-    then failwith "use correct list"
-    else
-        let y = List.rev x
-        let rec _go acc x =
-            match x with
-            | [] -> acc
-            | hd :: tl -> _go (Cons (hd, acc)) tl
-        _go (One y.[0]) (y.Tail)
-
-let toDefoltList x =        
-    List.rev (fold (fun acc elem -> elem :: acc) [] x)
-
 let concatMyString (x: MyString) (y: MyString) =
     (concat x y): MyString 
 
@@ -80,4 +69,3 @@ let toMyString (str: string) =
 
 let toString (x: MyString) =
     fold (fun acc elem -> acc + string elem) "" x
-   
