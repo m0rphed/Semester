@@ -27,11 +27,7 @@ let  toDefoltList x =
 let generator t =
     if t < 1
     then failwith "MyList cannot be created because input values uncorrect"
-<<<<<<< Updated upstream
-    else (toMyList (List.init t (fun _ -> System.Random().Next())))
-=======
     else (toMyList (List.init t (fun _ -> System.Random().Next(0,10))))
->>>>>>> Stashed changes
 
 let rec concat x y =
     match x with
