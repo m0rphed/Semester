@@ -153,7 +153,8 @@ let transferNegative y = // для инверснутого листа пере�
                 (One helper1)
                 (rev (addZero (rev helper2) checksLastIndex)) 
 
-let subtract fList sList = // вычитание 
+let subtract x y = // вычитание
+    let fList, sList = (deleteZeroes x), (deleteZeroes y)
     let mutable flag = 0
     let newList, newList1 = 
         if length fList > length sList
@@ -171,6 +172,7 @@ let subtract fList sList = // вычитание
             flag <- 1
             sList, (addZero fList (length sList - length fList + 1))
     let summedList = (map2 (-) (One ((head newList) - (head newList1))) (tail newList) (tail newList1))
+    printfn "%A" summedList
     if flag = 0
     then deleteZeroes (transferNegative summedList)
     else
