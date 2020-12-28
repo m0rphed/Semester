@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "UseLibrary": {
+      "commandName": "Project",
+      "commandLineArgs": "--bigariphmetics"
+    }
+  }
+}
