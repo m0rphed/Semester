@@ -44,7 +44,9 @@ let testingsOperations =
                        let second = generator (abs t)
                        let firstInt = fold (fun acc elem -> string elem + acc) "" (rev first) |> int
                        let secondInt = fold (fun acc elem -> string elem + acc) "" (rev second) |> int
-                       Expect.equal (firstInt / secondInt) (fold (fun acc elem -> string elem + acc) "" (rev (division first second)) |> int) "equals3"
+                       if secondInt = 0
+                       then Expect.equal 1 1 "exception"
+                       else Expect.equal (firstInt / secondInt) (fold (fun acc elem -> string elem + acc) "" (rev (division first second)) |> int) "equals3"
 
         ]
 [<Tests>]

@@ -223,10 +223,10 @@ let division fList sList = // деление
             then k <- k - 1                    
             if length fList = 1 || ((length fList = length sList || length fList = length sList + 1) && greatest (subtract fList (multiply (One (t - 1)) sList)) sList = false) 
             then One (t - 1)
-            else   
+            else
                 fold (fun (acc, current) elem -> 
                             if greatest (concat current (One elem)) sList = false
-                            then ((concat acc (One 0)), current)
+                            then ((concat acc (One 0)),concat current (One elem))
                             else
                                 let mutable j = 1
                                 while head (subtract (concat current (One elem)) (multiply (One j) sList)) >= 0 do
