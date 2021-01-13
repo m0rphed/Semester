@@ -69,3 +69,101 @@ let toMyString (str: string) =
 
 let toString (x: MyString) =
     fold (fun acc elem -> acc + string elem) "" x
+  
+let indexElem x i = // индекс i листа x 
+    let mutable firstElem =
+        match x with
+        | One t ->  t
+        | Cons (hd, tl) -> hd
+    let mutable k = 1
+    iter (fun elem -> if k = i then firstElem <- elem; k <- k + 1 else k <- k + 1) x
+    firstElem
+
+let tail x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
+    match x with
+       | One t -> One 0
+       | Cons (hd, tl) -> tl
+
+let head x = // голова листа
+    indexElem x 1
+    
+let rev x = // реверс
+    if length x > 1
+    then fold (fun acc elem -> Cons (elem, acc)) (One (head x)) (tail x)
+    else x
+
+let rec addZero acc k = // добавляет 0 
+       match k with
+       | k when k = 1 -> acc
+       | k -> addZero (Cons (0, acc)) (k - 1)
+
+let choosePart x k i = // выбирает кусок от k до i в листе 
+    if k = i
+    then One (indexElem x k)
+    else
+        let rec _go acc k =
+            match k with
+            | k when k = i -> Cons (indexElem x k, acc)
+            | k -> _go (Cons (indexElem x k, acc)) (k + 1)
+        rev (_go (One (indexElem x k)) (k + 1))
+
+let equals x y =
+    if length x <> length y then false
+    else 
+        let rec _go x y =
+            match x with
+            | One t ->
+                if t = head y
+                then true
+                else false
+            | Cons (hd, tl) ->
+                if hd = head y
+                then _go (tail x) (tail y)
+                else false
+        _go x y 
+
+let deleteZeroes x = // удаляет нули незначащие
+    let mutable flag = 0
+    iter (fun elem -> if elem <> 0 then flag <- 1) x
+    if flag = 0
+    then One 0
+    else
+        let rec _go acc =
+            match head acc with
+            | 0 -> _go (tail acc)
+            | _ -> acc
+        _go x
+
+let rec map2 f acc x y = // map2
+    match x, y with
+    | One t, One k -> Cons (f t k, acc)
+    | Cons (hd, tl), One t -> Cons (f hd t, acc)
+    | One t, Cons (hd, tl) -> Cons (f t hd, acc)  
+    | Cons (hd, tl), Cons(hd1, tl1) -> map2 f (Cons (f hd hd1, acc)) tl tl1
+
+let greatest x y = // выясняет кто больше из двух листов 
+    let rec _go x y =
+        match x with
+        | One t ->
+            if length y > 1
+            then false
+            elif length y = 1
+            then
+                if t = head y
+                then true
+                elif t > head y
+                then true
+                else false
+            else true
+        | Cons (hd, tl) ->
+            if length y = length (Cons (hd, tl))
+            then
+                if hd > head y
+                then true
+                elif hd = head y
+                then _go tl (tail y)
+                else false
+            elif length y > length (Cons (hd, tl))
+            then false
+            else true
+    _go x y
