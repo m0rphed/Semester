@@ -6,7 +6,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Quads.fs" />
         <Compile Include="LongArithmetics.fs" />
         <Compile Include="AssemblyInfo.fs" />
         <Compile Include="Main.fs" />
