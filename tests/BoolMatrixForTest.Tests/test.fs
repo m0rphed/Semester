@@ -69,17 +69,3 @@ let checkEquality =
                     writeOutputMatrix (fst f) "dasd.txt"
                     Expect.equal (fst f) (returnMatrix (readMatrix "dasd.txt")) "needs to be equal"
         ]
-[<Tests>]
-let checkSpecific =
-    testList "tests specific values"
-        [
-           testCase "empty "
-           <| fun _ ->
-               let first = generateRandomBoolAndDefoltMtx 0 0
-               let second = generateRandomBoolAndDefoltMtx 0 0
-               Expect.equal (multiplyBool (snd first) (snd second)) (Matrix (0, 0, [])) "Needs to be equal"
-           testCase "Input values < 0"
-           <| fun _ ->
-               Expect.throws (fun _ -> (fst (generateRandomBoolAndDefoltMtx -1 -1)) |> ignore) "Cannot create matrix" 
-        ]
-
