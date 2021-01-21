@@ -115,11 +115,4 @@ let iDontKnowHowToNameIt =
                               let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                               let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                               Expect.equal (sumMtx (fst x) (fst y)) (QuadTree.sum (create (snd x)) (create (snd y)) |> toMatrix) "needs to be equal"
-
-
-
-
-
-
-
         ]
