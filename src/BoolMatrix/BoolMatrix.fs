@@ -4,12 +4,12 @@ open System.IO
 
 [<Measure>] type Row
 [<Measure>] type Col
-[<Struct>]
+
 type Pair =
     val x: int<Row>
     val y: int<Col>
     new (p,q) = {x = p; y = q}
-[<Struct>]
+
 type Matrix =
     val numOfRows: int
     val numOfCols: int

@@ -63,7 +63,7 @@ let testingOtherFunc =
 
             testCase "greatest"
             <| fun _ ->
-                Expect.isFalse (greatest (Cons (2,Cons (0,Cons (8, One 0)))) (Cons (3,Cons (0,Cons (8, One 0))))) "first greater than second"
+                Expect.isFalse (compareBigInt (Cons (2,Cons (0,Cons (8, One 0)))) (Cons (3,Cons (0,Cons (8, One 0))))) "first greater than second"
 
             testCase "equal"
             <| fun _ ->
