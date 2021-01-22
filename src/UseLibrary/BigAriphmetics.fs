@@ -169,7 +169,3 @@ let division x y =
                         (concat acc (One (j - 1))), (subtract (concat current (One elem)) (multiply (One (j - 1)) sList)))
                 ((One (t - 1)), (subtract (choosePart fList 1 k) (multiply (One (t - 1)) sList)))
                 (choosePart fList (k + 1) (length fList)) |> fst
-
-                
-                
-                
