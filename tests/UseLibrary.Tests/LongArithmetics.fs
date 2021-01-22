@@ -88,22 +88,4 @@ let testingOtherFunc =
             testCase "map2"
             <| fun _ ->
                 Expect.equal (Cons (3, Cons (1, Cons (9, One 1)))) (rev (map2 (+) (One 3) (Cons (0,Cons (8, One 0))) (Cons (1,Cons (1, One 1))))) "needs to be equal"
-
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
         ]
-
-
