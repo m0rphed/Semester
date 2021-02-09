@@ -4,172 +4,151 @@ open System
 
 open Listik
 
+type sign =
+    | Positive 
+    | Negative 
+
+let private detect x = if x = 1 then Positive elif x = -1 then Negative else failwith "error"
+
+type BigInt =
+    val signOfNumber: sign
+    val digits: MyList<int>
+    new ((k: int), p) = {signOfNumber = (detect k); digits = p}
+    member this.sign = if this.signOfNumber = Positive then 1 else -1
+
+let absolute x = BigInt (1, x)
+
+let createBigInt length =
+    let randomSign = System.Random().Next(0,2) 
+    let out = generator length
+    if randomSign = 0
+    then BigInt (-1, out)
+    else BigInt (1, out)
+
 // добавляет 0 впереди числа
-let rec addZeroBeginning acc k = 
+let rec private addZeroBeginning acc k = 
     match k with
     | k when k = 1 -> acc
     | k -> addZeroBeginning (Cons (0, acc)) (k - 1)
 
 // добавляет 0 в конце числа 
-let addZeroEnd x k = rev (addZeroBeginning (rev x) k)
+let private addZeroEnd x k = rev (addZeroBeginning (rev x) k)
 
 // возвращает true если x >= y иначе false для big int
-let compareBigInt x y =
-    if length x > length y then true
-    elif length y > length x then false
-    else
-        let compareInt x y = if x = max x y then true else false 
+let compareDigits x y =
+    if length x = length y
+    then
         let rec _go x y =
             match x, y with
-            | One t, One t1 -> compareInt t t1
-            | Cons (hd, tl), One t -> true
-            | One t, Cons (hd, tl) -> false 
-            | Cons (hd, tl), Cons (hd1, tl1) ->  if hd = hd1 then _go tl tl1 else compareInt hd hd1
-        _go x y
-
-// возвращает false если x <> y иначе true
-let equals x y = 
-    if length x <> length y then false
-    else 
-        let rec _go x y =
-            match x with
-            | One t -> if t = head y then true else false
-            | Cons (hd, tl) -> if hd = head y then _go (tail x) (tail y) else false
+            | One t, One k -> t >= k
+            | Cons (hd, tl), Cons (hd1, tl1) -> if hd = hd1 then _go tl tl1 else hd > hd1
+            | _, _ -> failwith "cant be in this case"
         _go x y 
+    else length x > length y 
 
-let deleteZeroes x = // удаляет нули незначащие
-    let mutable flag = false
-    iter (fun elem -> if elem <> 0 then flag <- true) x
-    if flag = true
-    then
-        let rec _go acc =
-            match head acc with
-            | 0 -> _go (tail acc)
-            | _ -> acc
-        _go x
-    else One 0 
+let private deleteZeroes x = // удаляет нули незначащие
+    let rec _go x =
+        match x with
+        | One 0 -> One 0
+        | One k -> One k 
+        | Cons (0, tl) -> _go tl
+        | Cons (hd, tl) -> Cons (hd, tl)
+    _go x
 
-(*
-    функции transferPositive и transferNegarive для инверснутого листа переносят после суммы в другой разряд div 10
-    checksLastIndex нужна для проверки последнего индекса на кратность 10,
-    чтобы выделить дополнительное место, т.к. если это не сделать, в последнем индексе может оказаться число >=10
-    fElem, fTail первая итерация для рекурсии
-*)
-let checksLastIndex x =
-    let mutable j = 1
-    let mutable el = indexElem x (length x)
-    while el < 0 do
-        j <- j + 1
-        el <- el / 10
-    j
+let private equalizeLength (x: BigInt) (y: BigInt) =
+    if length x.digits > length y.digits
+    then x, BigInt (y.sign, addZeroBeginning y.digits (length x.digits - length y.digits + 1))
+    elif length x.digits < length y.digits
+    then BigInt (x.sign, addZeroBeginning x.digits (length y.digits - length x.digits + 1)), y
+    else x, y
 
-let transferPositive x = 
-    let fElem, fTail =         
-        if head x >= 10
-        then (head x % 10), (Cons ((head (tail x) + head x / 10), tail (tail x)))
-        else (head x), (tail x)
-    fold
-        (fun acc elem ->
-            if length acc = 1
-            then Cons (elem, acc)               
-            elif head acc >= 10
-            then Cons (elem + head acc / 10, Cons ((head acc % 10), tail acc))
-            else Cons (elem, acc))
-        (One fElem)
-        (addZeroEnd fTail (checksLastIndex x)) |> deleteZeroes
-
-let transferNegative x = 
-    let fElem, fTail =
-        if head x < 0 && head x % 10 = 0 
-        then ((10 + (head x % 10)) % 10, (Cons ((head (tail x) + (head x / 10)), tail (tail x))))
-        elif head x < 0 
-        then ((10 + (head x % 10)) % 10, (Cons ((head (tail x) + (head x / 10) - 1), tail (tail x))))
-        else (head x), (tail x)
-    fold
-        (fun acc elem ->
-            if length acc = 1
-            then Cons (elem, acc)
-            elif head acc < 0 && head acc % 10 = 0 
-            then Cons (elem + (head acc / 10), Cons (0, tail acc))
-            elif head acc < 0
-            then Cons (elem + (head acc / 10) - 1, Cons ((10 + (head acc % 10)) % 10, tail acc))
-            else Cons (elem, acc))
-        (One fElem)
-        (addZeroEnd fTail (checksLastIndex x))
-
-// addZeroBeginning fList 3 нужно для того чтобы не работать с числами длины 2 и 1, так бы пришлось писать еще условия
-// так же мы выравниваем числа до одинаковой длины, так удобнее работать
-let subtract x y = 
-    let fList, sList = (deleteZeroes x), (deleteZeroes y)
-    let bigger, smaller = 
-        if compareBigInt fList sList = true
-        then (addZeroBeginning fList 3), (addZeroBeginning sList (length fList - length sList + 3))
-        else (addZeroBeginning sList 3), (addZeroBeginning fList (length sList - length fList + 3))
-    let summedList = (map2 (-) (One ((head bigger) - (head smaller))) (tail bigger) (tail smaller))
-    if compareBigInt fList sList = true
-    then deleteZeroes (transferNegative summedList)
+let private choosePart x k i = // выбирает кусок от k до i в листе
+    if k = i
+    then One (indexElem x k)
     else
-        // если отриц число, то ставим -1 иначе ничего не делаем
-        let out = deleteZeroes (transferNegative summedList)
-        if length out = 1
-        then One (-1 * head out)
-        else Cons (head out * -1, tail out)
+        let rec _go acc k =
+            match k with
+            | k when k = i -> Cons (indexElem x k, acc)
+            | k -> _go (Cons (indexElem x k, acc)) (k + 1)
+        rev (_go (One (indexElem x k)) (k + 1))
 
-let sum fList sList = 
-    let bigger, smaller = 
-        if length fList > length sList
-        then (addZeroBeginning fList 3), (addZeroBeginning sList (length fList - length sList + 3))
-        else (addZeroBeginning sList 3), (addZeroBeginning fList (length sList - length fList + 3))       
-    let summedList = (map2 (+) (One ((head bigger) + (head smaller))) (tail bigger) (tail smaller))
-    transferPositive summedList
+let transferDigits x =
+    let output = 
+        fold
+            (fun (remainder, acc) elem ->
+                let current = elem + remainder
+                if current >= 0
+                then (current / 10, Cons (current % 10, acc))
+                else (-1, Cons (10 + (current % 10), acc)))
+            (0, One 0)
+            (rev x)
+    if fst output <> 0
+    then Cons (fst output, rev (specialTail (rev (snd output)))) |> deleteZeroes 
+    else rev (specialTail (rev (snd output))) |> deleteZeroes
+ 
+let sum (x: BigInt) (y: BigInt) =
+    // если знаки равны просто складываем, если нет то находим большее по модулю и однозначно знаем откуда вычитать
+    let fList, sList = equalizeLength x y 
+    if fList.sign = sList.sign
+    then BigInt (fList.sign, transferDigits (map2 (+) fList.digits sList.digits))
+    elif compareDigits fList.digits sList.digits  
+    then BigInt (fList.sign, transferDigits (map2 (-) fList.digits sList.digits))
+    else BigInt (sList.sign, transferDigits (map2 (-) sList.digits fList.digits))
 
-let multiply fList sList =
-    let bigger, smaller = 
-        if length fList > length sList
-        then (addZeroBeginning fList 3), (rev (addZeroBeginning sList (length fList - length sList + 3)))
-        else (addZeroBeginning sList 3), (rev (addZeroBeginning fList (length sList - length fList + 3)))
-    let firstMultiply = fold (fun acc elem -> Cons ((elem * head smaller), acc)) (One (head bigger * head smaller)) (tail bigger) |> rev
+let sub (x: BigInt) (y: BigInt) = sum x (BigInt (y.sign * -1, y.digits)) 
+
+let multiply (x: BigInt) (y: BigInt) =
+    // я придумал обходилку эксепшона с вызовом хвоста у единичного листа, везде юзаю special tail
+    // и добавляю к изначальным листам по 1 нулю, и тогда, когда попадается лист длины 1, все работает исправно
+    let fList, sList = addZeroBeginning x.digits 2, addZeroEnd (rev y.digits) 2
+    let fIter = fold (fun acc elem -> Cons ((elem * head sList), acc)) (One (head fList * head sList)) (specialTail fList) |> rev
     let mutable k = 1
-    fold
-        (fun acc elem ->
-            k <- k + 1            
-            sum
-                ((addZeroBeginning
-                    (fold
-                        (fun acc1 elem1 -> Cons ((elem1 * elem), acc1))
-                        (One (head bigger * elem))
-                        (tail bigger)) k) |> rev)
-                acc)
-        firstMultiply
-        (tail smaller) |> deleteZeroes
+    let output = 
+        fold
+            (fun acc elem ->               
+                k <- k + 1
+                sum
+                    (absolute ((addZeroBeginning
+                                   (fold
+                                       (fun acc1 elem1 -> Cons ((elem1 * elem), acc1))
+                                       (One (head fList * elem))
+                                       (specialTail fList)) k) |> rev))
+                    acc)
+            (absolute fIter)
+            (specialTail sList)
+    BigInt (x.sign * y.sign, deleteZeroes output.digits)
 
-let division x y =
-    // микро оптимизация 
-    let fList, sList = (deleteZeroes x), (deleteZeroes y)
-    if sList = One 0
+// умножалка по модулю
+let private absMul x y = (multiply (BigInt (1, x)) (BigInt (1, y))).digits
+
+let division (x: BigInt) (y: BigInt) =
+    let divident, divisor = (deleteZeroes x.digits), (deleteZeroes y.digits)
+    if divisor = One 0
     then failwith "cannot divide"              
-    elif compareBigInt fList sList = false then One 0
+    elif divisor = divident
+    then BigInt (x.sign * y.sign, One 1)
+    elif compareDigits divisor divident
+    then absolute (One 0)
     else
-        // первая итерация для рекурсии
-        let mutable k, t = 1, 1
-        while compareBigInt (choosePart fList 1 k) sList = false do k <- k + 1
-        while head (subtract (choosePart fList 1 k) (multiply (One t) sList)) >= 0 do t <- t + 1
-        if k + 1 > length fList then k <- k - 1
-        // обработка вырожденного случая
-        if length fList = 1 || ((length fList = length sList || length fList = length sList + 1) && compareBigInt (subtract fList (multiply (One (t - 1)) sList)) sList = false) 
-        then One (t - 1)
+        let returnRemainder divident0 counter =
+            let mutable counter1 = counter
+            while (sub divident0 (absolute (absMul (One counter1) divisor))).sign = 1 do counter1 <- counter1 + 1
+            (One (counter1 - 1)), (sub divident0 (absolute (absMul (One (counter1 - 1)) divisor))).digits
+        let mutable k = 1
+        while compareDigits divisor (choosePart divident 1 k) && divisor <> (choosePart divisor 1 k) do k <- k + 1 // первая итерация для фолда
+        let fDividentValue, fRemainder = returnRemainder (absolute (choosePart divident 1 k)) 0
+        if k + 1 > length divident then k <- k - 1
+        if length divident = 1 || (length divident = length divisor || length divident = length divisor + 1) // обработка случая когда при делении получается число длины 1
+                && compareDigits divisor (sub (absolute divident) (absolute (absMul fDividentValue divisor))).digits      
+        then BigInt (x.sign * y.sign, fDividentValue)
         else
-            fold
-                (fun (acc, current) elem -> 
-                    if compareBigInt (concat current (One elem)) sList = false
-                    then ((concat acc (One 0)),concat current (One elem))
-                    else
-                        let mutable j = 1
-                        while head (subtract (concat current (One elem)) (multiply (One j) sList)) >= 0 do j <- j + 1
-                        (concat acc (One (j - 1))), (subtract (concat current (One elem)) (multiply (One (j - 1)) sList)))
-                ((One (t - 1)), (subtract (choosePart fList 1 k) (multiply (One (t - 1)) sList)))
-                (choosePart fList (k + 1) (length fList)) |> fst
-
-                
-                
-                
+            BigInt (x.sign * y.sign,
+                fold
+                    (fun (acc, current) elem -> 
+                        if compareDigits divisor (concat current (One elem)) 
+                        then ((concat acc (One 0)), concat current (One elem))
+                        else
+                            let dividentValue, remainder = returnRemainder (absolute (concat current (One elem))) 0
+                            (concat acc dividentValue), remainder)
+                    (fDividentValue, fRemainder)
+                    (choosePart divident (k + 1) (length divident)) |> fst)   

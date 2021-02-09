@@ -21,7 +21,7 @@ let toMyList x =
         let y = List.rev x
         List.fold (fun acc elem -> if x = [] then acc else Cons (elem, acc)) (One y.[0]) (y.Tail)
 
-let  toDefoltList x =        
+let toDefoltList x =        
     List.rev (fold (fun acc elem -> elem :: acc) [] x)
 
 let generator t =
@@ -79,32 +79,33 @@ let indexElem x i = // индекс i листа x
     iter (fun elem -> if k = i then firstElem <- elem; k <- k + 1 else k <- k + 1) x
     firstElem
 
-let tail x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
+let tail x = 
+    match x with
+       | One t -> failwith "list length is not suitable"
+       | Cons (hd, tl) -> tl
+
+let specialTail x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
     match x with
        | One t -> One 0
        | Cons (hd, tl) -> tl
 
-let head x = // голова листа
-    indexElem x 1
+let head x = indexElem x 1
 
-let rev x = // реверс
+let rev x = 
     if length x > 1
     then fold (fun acc elem -> Cons (elem, acc)) (One (head x)) (tail x)
     else x
 
-let choosePart x k i = // выбирает кусок от k до i в листе 
-    if k = i
-    then One (indexElem x k)
+let map2 f x y = // map2
+    let rec _go f acc x y =
+        match x, y with
+        | One t, One k -> Cons (f t k, acc)
+        | Cons (hd, tl), Cons(hd1, tl1) -> _go f (Cons (f hd hd1, acc)) tl tl1
+        | _, _ -> failwith "cannot be in this case"
+    if length x <> length y
+    then failwith "lengths are not equal"
     else
-        let rec _go acc k =
-            match k with
-            | k when k = i -> Cons (indexElem x k, acc)
-            | k -> _go (Cons (indexElem x k, acc)) (k + 1)
-        rev (_go (One (indexElem x k)) (k + 1))
-
-let rec map2 f acc x y = // map2
-    match x, y with
-    | One t, One k -> Cons (f t k, acc)
-    | Cons (hd, tl), One t -> Cons (f hd t, acc)
-    | One t, Cons (hd, tl) -> Cons (f t hd, acc)  
-    | Cons (hd, tl), Cons(hd1, tl1) -> map2 f (Cons (f hd hd1, acc)) tl tl1
+        match x, y with
+        | One t, One k -> One (f t k)
+        | Cons (hd, tl), Cons (hd1, tl1) -> _go f (One (f hd hd1)) tl tl1 |> rev
+        | _, _ -> failwith "cannot be in this case"

@@ -48,36 +48,12 @@ let tensor (o: int[,]) (t: int[,]) =
             count1 <- i * (Array2D.length1 t) 
             count2 <- j * (Array2D.length2 t)
             Array2D.blit (multiplyByScalar o.[i,j] t) 0 0 output count1 count2 (Array2D.length1 t) (Array2D.length2 t)
-    output 
+    output
+
 [<Tests>]
 let iDontKnowHowToNameIt =
     testList "check all operations"
         [
-            testCase "tensor mult on matrix and on trees id"
-            <| fun _ ->
-                let x = ExtendedMatrix.generator 64 64
-                let y = ExtendedMatrix.generator 64 64  
-                Expect.equal (tensor (fst x) (fst y)) (tensorMultiply (create (snd x)) (create (snd y)) |> toMatrix) "needs to be equal"
-
-            testCase "check dim"
-            <| fun _ ->
-                let x = ExtendedMatrix.generator 8 8
-                Expect.equal (dim (create (snd x))) 8 "equals"
-
-            testProperty "findData x point point1 equal someMatrix.[point, point1]"
-            <| fun (k: int, index: int, index1: int) ->
-                if k <> 0 && abs k < 7 && abs index <= pown 2 (abs k) - 1 && abs index1 <= pown 2 (abs k) - 1 // чтоб индексы не вылетели
-                then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))                    
-                    Expect.equal (snd (findData (create (snd x)) ((abs index),(abs index1)))) (fst x).[abs index, abs index1] "id"
-
-            testProperty "check create from Matrix to Tree"
-            <| fun (k: int) ->
-                if k <> 0 && abs k < 7
-                then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (snd x) |> toMatrix) (fst x) "id"
-
             testCase "tensor mult"
             <| fun _ ->
                 let x = Array2D.create 2 2 1
@@ -87,11 +63,11 @@ let iDontKnowHowToNameIt =
 
             testProperty "tensor mult on matrix and on trees id №2"
             <| fun (k: int) ->
-                if k <> 0 && abs k < 7 // дальше выдает эксепшн на размер матрицы
+                if k <> 0 && abs k < 4
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))   
-                    Expect.equal (tensor (fst x) (fst y)) (tensorMultiply (create (snd x)) (create (snd y)) |> toMatrix) "needs to be equal"
+                    Expect.equal (create (createEM (tensor (fst x) (fst y)))) (tensorMultiply (create (snd x)) (create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix and on trees id"
             <| fun (k: int) ->
@@ -99,20 +75,20 @@ let iDontKnowHowToNameIt =
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (m (fst x) (fst y)) (QuadTree.multiply (create (snd x)) (create (snd y)) |> toMatrix) "needs to be equal"
+                    Expect.equal (create (createEM (m (fst x) (fst y)))) (QuadTree.multiply (create (snd x)) (create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix by scalar and on trees id"
             <| fun (k: int, scalar: int) ->
                 if k <> 0 && abs k < 7
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (multiplyByScalar scalar (fst x)) (multiplyConst 0 0 scalar (create (snd x)) |> toMatrix) "id"
+                    Expect.equal (create (createEM (multiplyByScalar scalar (fst x)))) (multiplyScalar scalar (create (snd x))) "id"
 
             testProperty "standart sum matrix and on trees id"
-                      <| fun (k: int) ->
-                          if k <> 0 && abs k < 7
-                          then
-                              let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                              let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                              Expect.equal (sumMtx (fst x) (fst y)) (QuadTree.sum (create (snd x)) (create (snd y)) |> toMatrix) "needs to be equal"
+            <| fun (k: int) ->
+                if k <> 0 && abs k < 7
+                then
+                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
+                    let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
+                    Expect.equal (create (createEM (sumMtx (fst x) (fst y)))) (QuadTree.sum (create (snd x)) (create (snd y))) "needs to be equal"
         ]

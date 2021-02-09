@@ -1,4 +1,4 @@
-﻿module ExtendedMatrix
+module ExtendedMatrix
 
 open test
 
@@ -14,6 +14,20 @@ type ExtendedMatrix =
     val numOfCols: int
     val notEmptyData: list<Triple> 
     new (k, p, lsts) = {numOfRows = k; numOfCols = p; notEmptyData = lsts}
+
+let createEM (x: int[,]) =
+    let mutable counter = 0  
+    for i in 0 .. Array2D.length1 x - 1 do
+        for j in 0 .. Array2D.length2 x - 1 do
+            if x.[i,j] = 0 then counter <- counter + 1
+    let arrOfData = Array.create (Array2D.length2 x * Array2D.length1 x - counter) (Triple (-1, -1, -1))
+    counter <- 0 
+    for i in 0 .. Array2D.length1 x - 1 do
+        for j in 0 .. Array2D.length2 x - 1 do
+            if x.[i,j] <> 0 then 
+                arrOfData.[counter] <- Triple (i, j, x.[i,j])
+                counter <- counter + 1
+    ExtendedMatrix (Array2D.length1 x, Array2D.length2 x, List.ofArray arrOfData)
 
 // генерирует кортеж из int[,] и ее расширенной матрицы
 let generator k i =
@@ -32,4 +46,4 @@ let generatorOneValue k i value =
         for j in 0 .. Array2D.length2 mtx - 1 do
             arr.[counter] <- Triple (i, j, value)
             counter <- counter + 1
-    ExtendedMatrix (k, i, List.ofArray arr)      
+    ExtendedMatrix (k, i, List.ofArray arr) 
