@@ -21,7 +21,7 @@ let toMyList x =
         let y = List.rev x
         List.fold (fun acc elem -> if x = [] then acc else Cons (elem, acc)) (One y.[0]) (y.Tail)
 
-let toDefoltList x =        
+let toSystemList x =        
     List.rev (fold (fun acc elem -> elem :: acc) [] x)
 
 let generator t =
@@ -70,24 +70,26 @@ let toMyString (str: string) =
 let toString (x: MyString) =
     fold (fun acc elem -> acc + string elem) "" x
   
-let indexElem x i = // индекс i листа x 
-    let mutable firstElem =
-        match x with
-        | One t ->  t
-        | Cons (hd, tl) -> hd
-    let mutable k = 1
-    iter (fun elem -> if k = i then firstElem <- elem; k <- k + 1 else k <- k + 1) x
-    firstElem
+let indexElem x i = // индекс i листа x
+    if i < 1 then failwith "wrong index"
+    else 
+        let mutable firstElem =
+            match x with
+            | One t ->  t
+            | Cons (hd, tl) -> hd
+        let mutable k = 1
+        iter (fun elem -> if k = i then firstElem <- elem; k <- k + 1 else k <- k + 1) x
+        firstElem
 
 let tail x = 
     match x with
-       | One t -> failwith "list length is not suitable"
-       | Cons (hd, tl) -> tl
+    | One t -> failwith "list length is not suitable"
+    | Cons (hd, tl) -> tl
 
-let specialTail x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
+let tailOrZero x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
     match x with
-       | One t -> One 0
-       | Cons (hd, tl) -> tl
+    | One t -> One 0
+    | Cons (hd, tl) -> tl
 
 let head x = indexElem x 1
 
@@ -96,7 +98,7 @@ let rev x =
     then fold (fun acc elem -> Cons (elem, acc)) (One (head x)) (tail x)
     else x
 
-let map2 f x y = // map2
+let map2 f x y = 
     let rec _go f acc x y =
         match x, y with
         | One t, One k -> Cons (f t k, acc)

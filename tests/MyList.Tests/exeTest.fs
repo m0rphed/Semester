@@ -12,21 +12,21 @@ let firstPackTest =
                 if abs k >= 1
                 then
                     let myList = generator (abs k)
-                    Expect.equal (toMyList (toDefoltList myList)) myList "needs to be equal"
+                    Expect.equal (toMyList (toSystemList myList)) myList "needs to be equal"
 
             testProperty "checks equivivalent list and MyList #2"
             <| fun (k: int) ->
                 if abs k >= 1
                 then
                     let commonList = List.init (abs k) (fun _ -> System.Random().Next())
-                    Expect.equal (toDefoltList (toMyList commonList)) commonList "needs to be equal"
+                    Expect.equal (toSystemList (toMyList commonList)) commonList "needs to be equal"
 
             testProperty "Check length id"
             <| fun (k: int) ->
                 if abs k >= 1
                 then
                     let myList = generator (abs k)
-                    Expect.equal ((toDefoltList myList).Length) (length myList) "length need to be equal"
+                    Expect.equal ((toSystemList myList).Length) (length myList) "length need to be equal"
 
             testProperty "Check concat id"
             <| fun (k: int,t: int) ->
@@ -34,14 +34,14 @@ let firstPackTest =
                 then
                     let myList0 = generator (abs t)
                     let myList = generator (abs k)
-                    Expect.equal (toMyList (List.concat [(toDefoltList myList0); (toDefoltList myList)])) (concat myList0 myList) "equality needs to be"
+                    Expect.equal (toMyList (List.concat [(toSystemList myList0); (toSystemList myList)])) (concat myList0 myList) "equality needs to be"
 
             testProperty "Check sort id"
             <| fun (k: int) ->
                 if abs k >= 1
                 then
                     let myList = generator (abs k)
-                    Expect.equal ((List.sort (toDefoltList myList))) (toDefoltList (sort myList)) "needs to be equal"
+                    Expect.equal ((List.sort (toSystemList myList))) (toSystemList (sort myList)) "needs to be equal"
 
             testProperty "Check iter id"
             <| fun (k: int) ->
@@ -50,7 +50,7 @@ let firstPackTest =
                     let myList = generator (abs k)
                     let mutable acc = 0
                     let mutable acc1 = 0
-                    List.iter (fun elem -> acc <- acc + elem) (toDefoltList myList)
+                    List.iter (fun elem -> acc <- acc + elem) (toSystemList myList)
                     iter (fun elem -> acc1 <- acc1 + elem) myList
                     Expect.equal acc acc1 "needs to be eqaul"
 
@@ -60,7 +60,7 @@ let firstPackTest =
                 then
                     let genList = generator (abs k)
                     let myList = map ((+) 2) genList
-                    let defList = List.map ((+) 2) (toDefoltList genList)                  
+                    let defList = List.map ((+) 2) (toSystemList genList)                  
                     Expect.equal myList (toMyList defList) "needs to be equal"
 
             testProperty "Check toMyString and toString id "
@@ -77,12 +77,12 @@ let secondTest =
             testCase "checks equivivalent list and MyList1"
             <| fun _ ->
                 let myList = Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))
-                Expect.equal (toMyList (toDefoltList myList)) (Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))) "needs to be equal"
+                Expect.equal (toMyList (toSystemList myList)) (Cons (5, Cons (4, Cons (3, Cons (2, Cons (1, One 0)))))) "needs to be equal"
 
             testCase "checks equivivalent list and MyList2"
             <| fun _ ->
                 let lst = [1;2;3;4;5;6;7]
-                Expect.equal (toDefoltList (toMyList lst)) [1;2;3;4;5;6;7] "needs to be equal"
+                Expect.equal (toSystemList (toMyList lst)) [1;2;3;4;5;6;7] "needs to be equal"
 
             testCase "check length"
             <| fun _ ->
@@ -125,19 +125,19 @@ let secondTest =
             testCase "map"
             <| fun _ ->
                 let myList = generator 5
-                Expect.equal (List.map ((+) 2) (toDefoltList myList)) (toDefoltList (map ((+) 2) myList)) "needs to be equal"
+                Expect.equal (List.map ((+) 2) (toSystemList myList)) (toSystemList (map ((+) 2) myList)) "needs to be equal"
 
             testCase "map1"
             <| fun _ ->
                 let myList = generator 5
-                Expect.equal (List.map ((*) 2) (toDefoltList myList)) (toDefoltList (map ((*) 2) myList)) "needs to be equal" 
+                Expect.equal (List.map ((*) 2) (toSystemList myList)) (toSystemList (map ((*) 2) myList)) "needs to be equal" 
    
             testCase "iter1"
             <| fun _ ->
                 let myList = generator 5
                 let mutable acc = 0
                 let mutable acc1 = 0
-                List.iter (fun elem -> acc <- acc + elem) (toDefoltList myList)
+                List.iter (fun elem -> acc <- acc + elem) (toSystemList myList)
                 iter (fun elem -> acc1 <- acc1 + elem) myList
                 Expect.equal acc acc1 "needs to be equal"
 
@@ -146,7 +146,7 @@ let secondTest =
                 let myList = generator 5
                 let mutable acc = 0
                 let mutable acc1 = 0
-                List.iter (fun elem -> acc <- acc - elem) (toDefoltList myList)
+                List.iter (fun elem -> acc <- acc - elem) (toSystemList myList)
                 iter (fun elem -> acc1 <- acc1 - elem) myList
                 Expect.equal acc acc1 "needs to be equal"
         ]

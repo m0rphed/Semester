@@ -16,6 +16,7 @@
     
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Group.fs" />
     <Compile Include="ExtendedMatrix.fs" />
     <Compile Include="QuadTree.fs" />
     <Compile Include="BigAriphmetics.fs" />

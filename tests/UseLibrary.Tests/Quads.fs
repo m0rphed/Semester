@@ -1,14 +1,13 @@
 module Quads
 
+open Group
+
 open QuadTree
 
 open ExtendedMatrix
 
 open Expecto
 
-open BigAriphmetics
-
-open Listik
 
 let sumMtx o (t: int[,]) =
     for i in 0 .. Array2D.length1 o - 1 do
@@ -31,8 +30,6 @@ let m (o: int[,]) (t: int[,]) =
         mtx      
     else failwith "Cannot multiply this"
 
-let prin (x: Triple list) = List.iter (fun (elem: Triple) -> printfn "%A %A" (elem.x, elem.y) elem.data) x
-
 let multiplyByScalar alpha x =
     let y = Array2D.copy x 
     for i in 0 .. Array2D.length1 x - 1 do
@@ -49,6 +46,9 @@ let tensor (o: int[,]) (t: int[,]) =
             count2 <- j * (Array2D.length2 t)
             Array2D.blit (multiplyByScalar o.[i,j] t) 0 0 output count1 count2 (Array2D.length1 t) (Array2D.length2 t)
     output
+// для теств подойдет обычное полукольцо с сложением и умножением интовым
+let x = new SemiRing<int>((+), (*), 0)
+let group = SemiRing x
 
 [<Tests>]
 let iDontKnowHowToNameIt =
@@ -67,7 +67,7 @@ let iDontKnowHowToNameIt =
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))   
-                    Expect.equal (create (createEM (tensor (fst x) (fst y)))) (tensorMultiply (create (snd x)) (create (snd y))) "needs to be equal"
+                    Expect.equal (create (createEM (tensor (fst x) (fst y)))) (tensorMultiply group (create (snd x)) (create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix and on trees id"
             <| fun (k: int) ->
@@ -75,14 +75,14 @@ let iDontKnowHowToNameIt =
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (m (fst x) (fst y)))) (QuadTree.multiply (create (snd x)) (create (snd y))) "needs to be equal"
+                    Expect.equal (create (createEM (m (fst x) (fst y)))) (QuadTree.multiply group (create (snd x)) (create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix by scalar and on trees id"
             <| fun (k: int, scalar: int) ->
                 if k <> 0 && abs k < 7
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (multiplyByScalar scalar (fst x)))) (multiplyScalar scalar (create (snd x))) "id"
+                    Expect.equal (create (createEM (multiplyByScalar scalar (fst x)))) (multiplyScalar group scalar (create (snd x))) "id"
 
             testProperty "standart sum matrix and on trees id"
             <| fun (k: int) ->
@@ -90,5 +90,5 @@ let iDontKnowHowToNameIt =
                 then
                     let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (sumMtx (fst x) (fst y)))) (QuadTree.sum (create (snd x)) (create (snd y))) "needs to be equal"
+                    Expect.equal (create (createEM (sumMtx (fst x) (fst y)))) (QuadTree.sum group (create (snd x)) (create (snd y))) "needs to be equal"
         ]
