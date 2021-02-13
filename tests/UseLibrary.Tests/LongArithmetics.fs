@@ -6,7 +6,7 @@ open BigAriphmetics
 
 open Listik
 
-let shablon valuesTest operator (operator1: BigInt -> BigInt -> BigInt) name =
+let template valuesTest operator (operator1: BigInt -> BigInt -> BigInt) name =
     testProperty name
     <| fun (k: int, t: int) ->
            if k <> 0 && abs k < valuesTest && t <> 0 && abs t < valuesTest // чтоб инты эксшепшн не выдавали
@@ -25,12 +25,12 @@ let shablon valuesTest operator (operator1: BigInt -> BigInt -> BigInt) name =
 let testingsOperations =
     testList "sum div multi subtr"
         [
-            shablon 8 (+) sum "sum"
+            template 8 (+) sum "sum"
 
-            shablon 8 (-) sub "sub"
+            template 8 (-) sub "sub"
 
-            shablon 5 (*) multiply  "multiply"
+            template 5 (*) multiply  "multiply"
 
-            shablon 8 (/) division "division"
+            template 8 (/) division "division"
         ]
 
