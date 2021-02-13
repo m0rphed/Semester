@@ -58,7 +58,9 @@ let sum group x y =
         | SemiRing x -> x.monoid.neutral, x.monoid.binaryOp
     let rec _go x y = 
         match x, y with
-        | Leaf a, Leaf b -> if neutral = operation a b then None else Leaf (operation a b)
+        | Leaf a, Leaf b ->
+            let current = operation a b 
+            if neutral = current then None else Leaf current
         | None, k -> k
         | k, None -> k
         | Node (tl, tl1, tl2, tl3), Node (tail, tail1, tail2, tail3) ->
@@ -79,7 +81,9 @@ let multiply group x y =
         | SemiRing x -> x.monoid.neutral, x.multiply
     let rec _go x y =
         match x, y with
-        | Leaf t, Leaf k -> if neutral = operation t k then None else Leaf (operation t k)
+        | Leaf t, Leaf k ->
+            let current = operation t k 
+            if neutral = current then None else Leaf current
         | None, _ -> None
         | _, None -> None
         | Node (q, q1, q2, q3), Node (qu, qu1, qu2, qu3) ->
