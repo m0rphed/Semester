@@ -41,7 +41,7 @@ let compareNumbers x y =
             | Cons (hd, tl), Cons (hd1, tl1) -> if hd = hd1 then _go tl tl1 else hd > hd1
             | _, _ -> failwith "cant be in this case"
         _go x y 
-    else length x > length y 
+    else length x >= length y
 
 let private deleteZeroes x = // удаляет нули незначащие
     let rec _go x =
@@ -58,16 +58,6 @@ let private equalizeLength (x: BigInt) (y: BigInt) =
     then BigInt (x.sign, addZeroBeginning x.digits (length y.digits - length x.digits + 1)), y
     else x, y
 
-let private choosePart x k i = // выбирает кусок от k до i в листе
-    if k = i
-    then One (indexElem x k)
-    else
-        let rec _go acc k =
-            if k = i
-            then Cons (indexElem x k, acc)
-            else _go (Cons (indexElem x k, acc)) (k + 1)
-        rev (_go (One (indexElem x k)) (k + 1))
-
 let transferDigits x =
     let output = 
         fold
@@ -75,7 +65,7 @@ let transferDigits x =
                 let current = elem + remainder
                 if current >= 0
                 then (current / 10, Cons (current % 10, acc))
-                else (-1, Cons (10 + (current % 10), acc)))
+                else (-1, Cons ((10 + (current % 10)) % 10, acc)))
             (0, One 0)
             (rev x)
     if fst output <> 0
@@ -121,30 +111,21 @@ let division (x: BigInt) (y: BigInt) =
     let divident, divisor = (deleteZeroes x.digits), (deleteZeroes y.digits)
     if divisor = One 0
     then failwith "cannot divide"              
-    elif divisor = divident
-    then BigInt (x.sign * y.sign, One 1)
-    elif compareNumbers divisor divident
-    then initPosInt (One 0)
     else
         let returnRemainder divident0 counter =
             let mutable counter1 = counter
-            while (sub divident0 (initPosInt (absMul (One counter1) divisor))).sign = 1 do counter1 <- counter1 + 1
-            (One (counter1 - 1)), (sub divident0 (initPosInt (absMul (One (counter1 - 1)) divisor))).digits
-        let mutable k = 1
-        while compareNumbers divisor (choosePart divident 1 k) && divisor <> (choosePart divisor 1 k) do k <- k + 1 // первая итерация для фолда
-        let fDividentValue, fRemainder = returnRemainder (initPosInt (choosePart divident 1 k)) 0
-        if k + 1 > length divident then k <- k - 1
-        if length divident = 1 || (length divident = length divisor || length divident = length divisor + 1) // обработка случая когда при делении получается число длины 1
-                && compareNumbers divisor (sub (initPosInt divident) (initPosInt (absMul fDividentValue divisor))).digits      
-        then BigInt (x.sign * y.sign, fDividentValue)
-        else
-            BigInt (x.sign * y.sign,
-                fold
-                    (fun (acc, current) elem -> 
-                        if compareNumbers divisor (concat current (One elem)) 
-                        then ((concat acc (One 0)), concat current (One elem))
-                        else
-                            let dividentValue, remainder = returnRemainder (initPosInt (concat current (One elem))) 0
-                            (concat acc dividentValue), remainder)
-                    (fDividentValue, fRemainder)
-                    (choosePart divident (k + 1) (length divident)) |> fst)   
+            while compareNumbers divident0 (absMul (One counter1) divisor) do counter1 <- counter1 + 1
+            (One (counter1 - 1)), (sub (initPosInt divident0) (initPosInt (absMul (One (counter1 - 1)) divisor))).digits
+        BigInt (x.sign * y.sign,
+            fold
+                (fun (acc, current) elem ->
+                    let currentInstance = (deleteZeroes (concat current (One elem)))
+                    if divisor = currentInstance
+                    then ((concat acc (One 1)), One 0)                   
+                    elif compareNumbers divisor currentInstance
+                    then ((concat acc (One 0)), currentInstance)
+                    else
+                        let dividentValue, remainder = returnRemainder currentInstance 0
+                        (deleteZeroes (concat acc dividentValue), remainder))
+                (One 0, One 0)
+                (divident) |> fst)  
