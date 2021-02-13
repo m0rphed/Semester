@@ -51,7 +51,7 @@ let x = new SemiRing<int>((+), (*), 0)
 let group = SemiRing x
 
 [<Tests>]
-let iDontKnowHowToNameIt =
+let treesOperations =
     testList "check all operations"
         [
             testCase "tensor mult"

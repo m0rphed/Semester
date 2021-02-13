@@ -52,13 +52,13 @@ let create (x: ExtendedMatrix<'t>) =
     _go (Pair((x.numOfCols / 2) * 1<Row>, (x.numOfCols / 2) * 1<Col>)) x
 
 let sum group x y =
-    let defineNone, defineOperation =
+    let neutral, operation =
         match group with
-        | Monoid x -> x.neutral, x.sum
-        | SemiRing x -> x.neutral, x.sum
+        | Monoid x -> x.neutral, x.binaryOp
+        | SemiRing x -> x.monoid.neutral, x.monoid.binaryOp
     let rec _go x y = 
         match x, y with
-        | Leaf a, Leaf b -> if defineNone = defineOperation a b then None else Leaf (defineOperation a b)
+        | Leaf a, Leaf b -> if neutral = operation a b then None else Leaf (operation a b)
         | None, k -> k
         | k, None -> k
         | Node (tl, tl1, tl2, tl3), Node (tail, tail1, tail2, tail3) ->
@@ -66,20 +66,20 @@ let sum group x y =
             let second = _go tl1 tail1
             let third = _go tl2 tail2
             let fourth = _go tl3 tail3
-            if first = second && second = third && third = fourth && fourth = None
+            if first = None && second = None && third = None && fourth = None
             then None
             else Node (first, second, third, fourth)
         | _, _ -> failwith "cannot sum trees with different dimensions"
     _go x y
 
 let multiply group x y =
-    let defineNeutral, defineOperation =
+    let neutral, operation =
         match group with
         | Monoid x -> failwith "monoid cannot be in multiply"
-        | SemiRing x -> x.neutral, x.multiply
+        | SemiRing x -> x.monoid.neutral, x.multiply
     let rec _go x y =
         match x, y with
-        | Leaf t, Leaf k -> if defineNeutral = defineOperation t k then None else Leaf (defineOperation t k)
+        | Leaf t, Leaf k -> if neutral = operation t k then None else Leaf (operation t k)
         | None, _ -> None
         | _, None -> None
         | Node (q, q1, q2, q3), Node (qu, qu1, qu2, qu3) ->
@@ -89,23 +89,23 @@ let multiply group x y =
             let second = sum group (_go q qu1) (_go q1 qu3)
             let third = sum group (_go q2 qu) (_go q3 qu2)
             let fourth = sum group (_go q2 qu1) (_go q3 qu3)
-            if first = second && second = third && third = fourth && fourth = None
+            if first = None && second = None && third = None && fourth = None
             then None
             else Node (first, second, third, fourth)
         | _, _ -> failwith "cannot be in this case"
     _go x y
 
 let multiplyScalar group (scalar: 't) x =
-    let defineNeutral, defineOperation =
+    let neutral, operation =
         match group with
-        | Monoid x -> x.neutral, x.sum
-        | SemiRing x -> x.neutral, x.multiply
-    if scalar = defineNeutral
+        | Monoid x -> x.neutral, x.binaryOp
+        | SemiRing x -> x.monoid.neutral, x.multiply
+    if scalar = neutral
     then None
     else
         let rec _go x =
             match x with
-            | Leaf t -> Leaf (defineOperation scalar t)
+            | Leaf t -> Leaf (operation scalar t)
             | None -> None
             | Node (q, q1, q2, q3) -> Node (_go q, _go q1, _go q2, _go q3)
         _go x
