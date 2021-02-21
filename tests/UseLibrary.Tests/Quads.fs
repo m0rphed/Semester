@@ -1,12 +1,47 @@
 module Quads
 
-open Group
+open AlgebraicStruct
 
-open QuadTree
+open SparseMatrix
 
-open ExtendedMatrix
+open bMatrix
+
+open test
 
 open Expecto
+
+// генерирует кортеж из int[,] и ее расширенной матрицы
+let generator k i =
+    let reconstruct, reconstruct1 = generateRandomBoolAndDefoltMtx k i
+    let x = List.map (fun (elem: Pair) ->
+        Triple (int elem.x, int elem.y, (System.Random().Next()))) reconstruct1.notEmptyData
+    for j in x do reconstruct.[int j.coordinates.x, int j.coordinates.y] <- j.data
+    reconstruct, SparseMatrix(reconstruct1.numOfRows, reconstruct1.numOfCols, x)
+
+let createEM (x: int[,]) =
+    let mutable counter = 0  
+    for i in 0 .. Array2D.length1 x - 1 do
+        for j in 0 .. Array2D.length2 x - 1 do
+            if x.[i,j] = 0 then counter <- counter + 1
+    let arrOfData = Array.create (Array2D.length2 x * Array2D.length1 x - counter) (Triple (1, 1, 0))
+    counter <- 0 
+    for i in 0 .. Array2D.length1 x - 1 do
+        for j in 0 .. Array2D.length2 x - 1 do
+            if x.[i,j] <> 0 then 
+                arrOfData.[counter] <- Triple (i, j, x.[i,j])
+                counter <- counter + 1
+    SparseMatrix(Array2D.length1 x, Array2D.length2 x, List.ofArray arrOfData)
+
+// создает ExtendedMatrix на основе матрицы, в которой если value <> 0 существуют все элементы
+let generatorOneValue k i value =
+    let mutable counter = 0
+    let mtx = Array2D.create k i value
+    let arr = Array.create (k * i) (Triple(-1, -1, 0))
+    for i in 0 .. Array2D.length1 mtx - 1 do
+        for j in 0 .. Array2D.length2 mtx - 1 do
+            arr.[counter] <- Triple (i, j, value)
+            counter <- counter + 1
+    SparseMatrix(k, i, List.ofArray arr)
 
 
 let sumMtx o (t: int[,]) =
@@ -47,48 +82,51 @@ let tensor (o: int[,]) (t: int[,]) =
             Array2D.blit (multiplyByScalar o.[i,j] t) 0 0 output count1 count2 (Array2D.length1 t) (Array2D.length2 t)
     output
 // для теств подойдет обычное полукольцо с сложением и умножением интовым
-let x = new SemiRing<int>((+), (*), 0)
+let y = new Monoid<int>((+), 0)
+let x = new SemiRing<int>(y, (*))
 let group = SemiRing x
 
 [<Tests>]
 let treesOperations =
     testList "check all operations"
         [
-            testCase "tensor mult"
-            <| fun _ ->
-                let x = Array2D.create 2 2 1
-                let y = Array2D.create 2 2 2
-                let vector = Array2D.create 1 1 2
-                Expect.equal y (tensor vector x) "equal" // 1 1 1 1 * 2 -> 2 2 2 2 только в матрице 2 * 2 
+            testProperty "tomatrix test"
+            <| fun (k: int) ->
+                if k > 0 && abs k < 6
+                then
+                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    let y = (createTree (QuadTree<_>.toMatrix (createTree (snd x)) (snd x).numOfCols 0))
+                    let z = createTree (snd x)
+                    Expect.equal y z "needs to be equal"
 
             testProperty "tensor mult on matrix and on trees id №2"
             <| fun (k: int) ->
                 if k <> 0 && abs k < 4
                 then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))   
-                    Expect.equal (create (createEM (tensor (fst x) (fst y)))) (tensorMultiply group (create (snd x)) (create (snd y))) "needs to be equal"
+                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    let y = generator (pown 2 (abs k)) (pown 2 (abs k))   
+                    Expect.equal (createTree (createEM (tensor (fst x) (fst y)))) (QuadTree.tensorMultiply group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix and on trees id"
             <| fun (k: int) ->
                 if k <> 0 && abs k < 7
                 then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (m (fst x) (fst y)))) (QuadTree.multiply group (create (snd x)) (create (snd y))) "needs to be equal"
+                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    let y = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    Expect.equal (createTree (createEM (m (fst x) (fst y)))) (QuadTree<_>.multiply group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix by scalar and on trees id"
             <| fun (k: int, scalar: int) ->
                 if k <> 0 && abs k < 7
                 then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (multiplyByScalar scalar (fst x)))) (multiplyScalar group scalar (create (snd x))) "id"
+                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    Expect.equal (createTree (createEM (multiplyByScalar scalar (fst x)))) (QuadTree.multiplyScalar group scalar (createTree (snd x))) "id"
 
             testProperty "standart sum matrix and on trees id"
             <| fun (k: int) ->
                 if k <> 0 && abs k < 7
                 then
-                    let x = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = ExtendedMatrix.generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (create (createEM (sumMtx (fst x) (fst y)))) (QuadTree.sum group (create (snd x)) (create (snd y))) "needs to be equal"
+                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    let y = generator (pown 2 (abs k)) (pown 2 (abs k))
+                    Expect.equal (createTree (createEM (sumMtx (fst x) (fst y)))) (QuadTree<_>.sum group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
         ]

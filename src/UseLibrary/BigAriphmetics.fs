@@ -14,7 +14,7 @@ type BigInt =
     val signOfNumber: sign
     val digits: MyList<int>
     new ((k: int), p) = {signOfNumber = (detect k); digits = p}
-    member this.sign = if this.signOfNumber = Positive then 1 else -1
+    member this.sign = if this.signOfNumber = Positive then 1 else -1 
 
 let initPosInt x = BigInt (1, x) 
 
