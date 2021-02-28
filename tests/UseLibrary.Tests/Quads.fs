@@ -72,15 +72,14 @@ let multiplyByScalar alpha x =
             y.[i,j] <- alpha * y.[i,j]
     y
 
-let tensor (o: int[,]) (t: int[,]) =
-    let mutable count1, count2 = 0, 0
-    let output = Array2D.create (Array2D.length1 o * Array2D.length2 t) (Array2D.length1 o * Array2D.length2 t) 1
-    for i in 0 .. Array2D.length1 o - 1 do
-        for j in 0 .. Array2D.length2 o - 1 do
-            count1 <- i * (Array2D.length1 t) 
-            count2 <- j * (Array2D.length2 t)
-            Array2D.blit (multiplyByScalar o.[i,j] t) 0 0 output count1 count2 (Array2D.length1 t) (Array2D.length2 t)
-    output
+let tensor (m1: int[,]) (m2: int[,]) =
+    let rows = m1.GetLength 0 * m2.GetLength 0
+    let columns = m1.GetLength 1 * m2.GetLength 1
+    let res = Array2D.zeroCreate rows columns
+    for i in 0..rows - 1 do
+        for j in 0..columns - 1 do
+            res.[i,j] <- m1.[i / m2.GetLength 0, j / m2.GetLength 1 ] * m2.[i % m2.GetLength 0, j % m2.GetLength 0]
+    res
 // для теств подойдет обычное полукольцо с сложением и умножением интовым
 let y = new Monoid<int>((+), 0)
 let x = new SemiRing<int>(y, (*))
@@ -95,8 +94,8 @@ let treesOperations =
                 if k > 0 && abs k < 6
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = (createTree (QuadTree<_>.toMatrix (createTree (snd x)) (snd x).numOfCols 0))
-                    let z = createTree (snd x)
+                    let y = (QuadTreeMatrix.create (QuadTreeMatrix.toMatrix (QuadTreeMatrix.create (snd x)) 0))
+                    let z = QuadTreeMatrix.create (snd x)
                     Expect.equal y z "needs to be equal"
 
             testProperty "tensor mult on matrix and on trees id №2"
@@ -105,7 +104,7 @@ let treesOperations =
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = generator (pown 2 (abs k)) (pown 2 (abs k))   
-                    Expect.equal (createTree (createEM (tensor (fst x) (fst y)))) (QuadTree.tensorMultiply group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
+                    Expect.equal (QuadTreeMatrix.create (createEM (tensor (fst x) (fst y)))) (QuadTreeMatrix.tensorMul group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix and on trees id"
             <| fun (k: int) ->
@@ -113,14 +112,14 @@ let treesOperations =
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (createTree (createEM (m (fst x) (fst y)))) (QuadTree<_>.multiply group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
+                    Expect.equal (QuadTreeMatrix.create (createEM (m (fst x) (fst y)))) (QuadTreeMatrix.multiply group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix by scalar and on trees id"
             <| fun (k: int, scalar: int) ->
                 if k <> 0 && abs k < 7
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (createTree (createEM (multiplyByScalar scalar (fst x)))) (QuadTree.multiplyScalar group scalar (createTree (snd x))) "id"
+                    Expect.equal (QuadTreeMatrix.create (createEM (multiplyByScalar scalar (fst x)))) (QuadTreeMatrix.multiplyScalar group scalar (QuadTreeMatrix.create (snd x))) "id"
 
             testProperty "standart sum matrix and on trees id"
             <| fun (k: int) ->
@@ -128,5 +127,6 @@ let treesOperations =
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
                     let y = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (createTree (createEM (sumMtx (fst x) (fst y)))) (QuadTree<_>.sum group (createTree (snd x)) (createTree (snd y))) "needs to be equal"
+                    Expect.equal (QuadTreeMatrix.create (createEM (sumMtx (fst x) (fst y)))) (QuadTreeMatrix.sum group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y))) "needs to be equal"
         ]
+
