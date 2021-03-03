@@ -94,7 +94,7 @@ let treesOperations =
                 if k > 0 && abs k < 6
                 then
                     let x = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = (QuadTreeMatrix.create (QuadTreeMatrix.toMatrix (QuadTreeMatrix.create (snd x)) 0))
+                    let y = (QuadTreeMatrix.create (QuadTreeMatrix.toMatrix (QuadTreeMatrix.create (snd x))))
                     let z = QuadTreeMatrix.create (snd x)
                     Expect.equal y z "needs to be equal"
 
@@ -107,12 +107,21 @@ let treesOperations =
                     Expect.equal (QuadTreeMatrix.create (createEM (tensor (fst x) (fst y)))) (QuadTreeMatrix.tensorMul group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y))) "needs to be equal"
 
             testProperty "standart mult matrix and on trees id"
-            <| fun (k: int) ->
-                if k <> 0 && abs k < 7
+            <| fun (k: int, t: int, p: int) ->
+                if k <> 0 && abs k < 32 && t <> 0 && abs t < 32 && p <> 0 && abs p < 32
                 then
-                    let x = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    let y = generator (pown 2 (abs k)) (pown 2 (abs k))
-                    Expect.equal (QuadTreeMatrix.create (createEM (m (fst x) (fst y)))) (QuadTreeMatrix.multiply group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y))) "needs to be equal"
+                    let x = generator (abs t) (abs k)
+                    let y = generator (abs k) (abs p)
+                    let output = Array2D.zeroCreate (abs t) (abs p)
+                    let fTree =
+                        QuadTreeMatrix.toMatrix
+                            (QuadTreeMatrix.multiply group (QuadTreeMatrix.create (snd x)) (QuadTreeMatrix.create (snd y)))
+
+                    for i in fTree.notEmptyData do
+                        output.[int i.coordinates.x, int i.coordinates.y] <- i.data
+                    
+                    let sTree = m (fst x) (fst y)
+                    Expect.equal output sTree "needs to be equal"
 
             testProperty "standart mult matrix by scalar and on trees id"
             <| fun (k: int, scalar: int) ->
