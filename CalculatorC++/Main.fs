@@ -17,7 +17,7 @@ open FSharp.Text.Lexing
 
 let parse (text: string) =
     let lexbuf = LexBuffer<char>.FromString text
-    let parsed = CalcParser.start Lexer.tokenStream lexbuf
+    let parsed = CalcParser.start Lexer.tokenStream lexbuf   
     parsed
 
 [<EntryPoint>]
@@ -28,10 +28,10 @@ let main (argv: string array) =
     | p when p.Contains(Input) ->
         let file = results.GetResult Input
         let ast = parse (System.IO.File.ReadAllText file)
-        Interpretator.run ast "C:\Users\Zver\Desktop\dot\\this.dot"
+        Interpretator.run ast "output.dot"
     | p when p.Contains(Calculate) ->
         let expr = results.GetResult Calculate
-        let full_expr = parse ("let [x] = " + expr + " print [x]")
-        Interpretator.run full_expr "C:\Users\Zver\Desktop\dot\\this.dot"
+        let full_expr = parse ("x = " + expr + " print x")
+        Interpretator.run full_expr "output.dot"
     | _ -> parser.PrintUsage() |> printfn "%s"
     0   

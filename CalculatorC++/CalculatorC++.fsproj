@@ -10,6 +10,8 @@
     <Compile Include="Exp.fs" />
     <Compile Include="CalcParser.fs" />
     <Compile Include="Lexer.fs" />
+    <None Include="CalcParser.fsy" />
+    <None Include="Lexer.fsl" />
     <Compile Include="Interpretator.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>

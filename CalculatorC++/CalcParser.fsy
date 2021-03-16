@@ -14,7 +14,6 @@
 %token LBR
 %token RBR
 %token <string> VNAME
-%token KW_LET
 %token KW_PRINT
 %token EQ 
 
@@ -28,10 +27,11 @@
 %%
 
 start: stmt {[$1]}
-     | stmt start {$1 :: $2}
+    | stmt start {$1 :: $2}
 
-stmt: KW_PRINT vname {Exp.Print($2)}
-    | KW_LET vname EQ expression {Exp.VDecl($2,$4)}
+stmt: 
+    | vname EQ expression {Exp.VDecl($1,$3)}
+    | KW_PRINT vname {Exp.Print($2)}
 
 expression: 
     | tExpression {$1}
