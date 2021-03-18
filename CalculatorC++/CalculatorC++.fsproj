@@ -13,6 +13,7 @@
     <None Include="CalcParser.fsy" />
     <None Include="Lexer.fsl" />
     <Compile Include="Interpretator.fs" />
+    <Compile Include="ParseTree.fs" />
     <Compile Include="Main.fs" />
   </ItemGroup>
 
