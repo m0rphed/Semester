@@ -18,10 +18,22 @@ let calculate (ast: Exp.Program) =
     | Exp.VDecl (_, e) -> processExpr (Dictionary<_,_>()) e
     | _ -> failwith "unexpected statement"
 
+let pr1 =
+    """
+    x = 228
+    y = 1337
+    z = y / x * 5
+    print x
+    print y
+    print z
+    """
+Interpretator.run (parse pr1)
+printfn "Expected \n228\n1337\n25"
+
 [<Tests>]
 let parsingString =
     testList "check all operations"
-        [
+        [       
             testCase "test (+) parsing"
             <| fun _ ->                
                 let subject =
