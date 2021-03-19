@@ -15,7 +15,6 @@ type CLIArguments =
             | ToDot _ -> "prints to dot"
             | Compute _ -> "computes expression"
 
-
 let parse (text: string) =
     let lexbuf = LexBuffer<char>.FromString text
     let parsed = CalcParser.start Lexer.tokenStream lexbuf   
