@@ -1,7 +1,6 @@
 module calculations
 
 open Main
-
 open Interpretator
 open Expecto
 
