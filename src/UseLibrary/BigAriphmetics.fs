@@ -15,7 +15,8 @@ type BigInt =
     val digits: MyList<int>
     new ((k: int), p) = {signOfNumber = (detect k); digits = p}
     member this.sign = if this.signOfNumber = Positive then 1 else -1
-    static member convertString (y: string) =
+    static member convertString (str: string) =
+        let y = str.Trim()
         if y.Length = 0
         then failwith "input not empty data!"
         else

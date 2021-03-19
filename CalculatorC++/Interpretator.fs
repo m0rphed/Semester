@@ -1,9 +1,7 @@
 module Interpretator
 
 open Listik
-
 open BigAriphmetics
-
 open System.Collections.Generic
 
 let rec processExpr (vDict: Dictionary<_,_>) expr =
@@ -39,6 +37,12 @@ let processStmt (vDict: Dictionary<_,_>) stmt =
         then vDict.[x] <- processExpr vDict y
         else vDict.Add (x, processExpr vDict y)
     vDict
+
+let calculate (ast: Exp.Program) =
+    toInt <|
+    match ast.[0] with
+    | Exp.VDecl (_, e) -> processExpr (Dictionary<_,_>()) e
+    | _ -> failwith "unexpected statement"
 
 let run ast =
     let vDict = new Dictionary<_,_>()

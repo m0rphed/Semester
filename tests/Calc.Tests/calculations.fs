@@ -3,20 +3,7 @@ module calculations
 open Main
 
 open Interpretator
-
 open Expecto
-
-open System
-
-open System.Collections.Generic
-
-open BigAriphmetics
-
-let calculate (ast: Exp.Program) =
-    toInt <|
-    match ast.[0] with
-    | Exp.VDecl (_, e) -> processExpr (Dictionary<_,_>()) e
-    | _ -> failwith "unexpected statement"
 
 let pr1 =
     """
@@ -33,7 +20,7 @@ printfn "Expected \n228\n1337\n25"
 [<Tests>]
 let parsingString =
     testList "check all operations"
-        [       
+        [
             testCase "test (+) parsing"
             <| fun _ ->                
                 let subject =
@@ -114,4 +101,16 @@ let parsingString =
                 Expect.equal ans expectedAns "needs to be equal"
 
         ]
-
+[<Tests>]
+let exceptions =
+    testList "exceptions"
+        [
+            testCase "specify numbers"
+            <| fun _ ->                
+                let x = "x = 0001 "            
+                Expect.throws (fun _ -> calculate (Main.parse x)|> ignore) "exception"
+            testCase "div by zero"
+            <| fun _ ->                
+                let x = "x = 12 / 0 "            
+                Expect.throws (fun _ -> calculate (Main.parse x) |> ignore) "exception"
+        ]

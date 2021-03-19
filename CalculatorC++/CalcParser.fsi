@@ -16,7 +16,7 @@ type token =
   | Div
   | Sub
   | Sum
-  | NUM of (string)
+  | NUM of (BigAriphmetics.BigInt)
 type tokenId = 
     | TOKEN_EOF
     | TOKEN_EQ

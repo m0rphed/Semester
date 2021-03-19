@@ -1,28 +1,20 @@
 module Main
 open Argu
-open System
-open System.Globalization
-open System.Collections.Generic
+open FSharp.Text.Lexing
 
 type CLIArguments =
-    | ComputeExpression of string
-    | ComputeFile of string
-    | FileToDot of expr:string * path:string
-    | ExpressionToDot of expr:string * path:string
-    | ComputeExpressionToDot of expr:string * path:string
-    | ComputeFileToDot of expr:string * path:string
-
+    | InputFile of string
+    | InputString of string
+    | ToDot of string
+    | Compute 
     interface IArgParserTemplate with
         member s.Usage =
             match s with
-            | ComputeExpression _ -> "computes the given expression"
-            | ComputeFile _ -> "reads file and compute the expressions in it"
-            | FileToDot _ -> "reads file, parse him and write parse tree in dot file"
-            | ExpressionToDot _ -> "parses expression and write parse tree"
-            | ComputeExpressionToDot _ -> "computes expression and writes parse tree in dot file"
-            | ComputeFileToDot _ -> "reads file, compute the expressions in it and writes parse tree in dot file"
+            | InputFile _ -> "reads file"
+            | InputString _ -> "reads string"
+            | ToDot _ -> "prints to dot"
+            | Compute _ -> "computes expression"
 
-open FSharp.Text.Lexing
 
 let parse (text: string) =
     let lexbuf = LexBuffer<char>.FromString text
@@ -33,30 +25,14 @@ let parse (text: string) =
 let main (argv: string array) =
     let parser = ArgumentParser.Create<CLIArguments>(programName = "Arithmetics interpreter")
     let results = parser.Parse(argv)
-    match parser.ParseCommandLine argv with
-    | p when p.Contains(ComputeExpression) ->
-        let exp = results.GetResult ComputeExpression       
-        let program = parse exp
-        Interpretator.run program
-    | p when p.Contains(ComputeFile) ->
-        let exp = results.GetResult ComputeFile       
-        let program = parse (System.IO.File.ReadAllText exp) 
-        Interpretator.run program
-    | p when p.Contains(FileToDot) ->
-        let exp, path = results.GetResult FileToDot        
-        let program = parse (System.IO.File.ReadAllText exp)
-        ParseTree.run false program path
-    | p when p.Contains(ExpressionToDot) ->
-        let exp, path = results.GetResult ExpressionToDot        
-        let program = parse exp
-        ParseTree.run false program path
-    | p when p.Contains(ComputeFileToDot) ->
-        let exp, path = results.GetResult ComputeFileToDot        
-        let program = parse (System.IO.File.ReadAllText exp)
-        ParseTree.run true program path
-    | p when p.Contains(ComputeExpressionToDot) ->
-        let exp, path = results.GetResult ComputeExpressionToDot        
-        let program = parse exp
-        ParseTree.run true program path
-    | _ -> parser.PrintUsage() |> printfn "%s"
-    0   
+    let p = parser.ParseCommandLine argv
+    if argv.Length = 0 || results.IsUsageRequested then parser.PrintUsage() |> printfn "%s"
+    else
+        let input =
+            if p.Contains(InputFile) then (System.IO.File.ReadAllText (results.GetResult InputFile))
+            elif p.Contains(InputString) then results.GetResult InputString
+            else failwith "code do not contains key word"
+        let ast = parse input
+        if p.Contains(Compute) then Interpretator.run ast
+        if p.Contains(ToDot) then ToDot.drawParseTree ast (results.GetResult ToDot)
+    0

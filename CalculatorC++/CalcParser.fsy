@@ -1,7 +1,7 @@
 ﻿%start start
 
 // Regular tokens
-%token <string> NUM
+%token <BigAriphmetics.BigInt> NUM
 %token Sum
 %token Sub
 %token Div
@@ -51,7 +51,7 @@ factor:
 power: 
     | LBR expression RBR {$2}  
     | LBRMOD expression RBRMOD {Exp.Abs $2}
-    | NUM {Exp.Num(BigAriphmetics.BigInt.convertString $1)}
+    | NUM {Exp.Num $1}
     | vname {Exp.NVar($1)}
     | Bin expression {Exp.Bin $2}
 

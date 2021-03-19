@@ -6,19 +6,18 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="Quads.fs" />
-        <Compile Include="LongArithmetics.fs" />
+      <None Remove="C:\Users\Zver\.nuget\packages\fsharp.core\5.0.1\contentFiles\any\netstandard2.0\FSharp.Core.xml" />
+    </ItemGroup>
+    <ItemGroup>
         <Compile Include="AssemblyInfo.fs" />
+        <Compile Include="calculations.fs" />
         <Compile Include="Main.fs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Expecto.FsCheck" Version="8.13.1" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="../../src/Semester/Semester.fsproj" />
-        <ProjectReference Include="..\..\CalculatorC++\CalculatorC++.fsproj" />
-        <ProjectReference Include="..\..\src\MyList\MyList.fsproj" />
-        <ProjectReference Include="..\..\src\UseLibrary\UseLibrary.fsproj" />
+      <ProjectReference Include="..\..\CalculatorC++\CalculatorC++.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
