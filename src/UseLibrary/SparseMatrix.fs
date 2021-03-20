@@ -148,7 +148,10 @@ type QuadTreeMatrix<'t when 't : equality> =
             match x, size with
             | None, _ -> None
             | _, 0 -> x
-            | Node(q1, q2, q3, q4), _ -> _go q1 (size - 1)
+            | Node(q1, None, None, None), _ -> _go q1 (size - 1)
+            | Node(None, q1, None, None), _ -> _go q1 (size - 1)
+            | Node(None, None, q1, None), _ -> _go q1 (size - 1)
+            | Node(None, None, None, q1), _ -> _go q1 (size - 1)
             | _, _ -> failwith "cannot reduce this"
         _go x iter
 
