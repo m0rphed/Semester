@@ -21,13 +21,13 @@ let toMyList x =
         let y = List.rev x
         List.fold (fun acc elem -> if x = [] then acc else Cons (elem, acc)) (One y.[0]) (y.Tail)
 
-let  toDefoltList x =        
+let toSystemList x =        
     List.rev (fold (fun acc elem -> elem :: acc) [] x)
 
 let generator t =
     if t < 1
     then failwith "MyList cannot be created because input values uncorrect"
-    else (toMyList (List.init t (fun _ -> System.Random().Next())))
+    else (toMyList (List.init t (fun _ -> System.Random().Next(0,10))))
 
 let rec concat x y =
     match x with
@@ -69,3 +69,45 @@ let toMyString (str: string) =
 
 let toString (x: MyString) =
     fold (fun acc elem -> acc + string elem) "" x
+  
+let indexElem x i = // индекс i листа x
+    if i < 1 then failwith "wrong index"
+    else 
+        let mutable firstElem =
+            match x with
+            | One t ->  t
+            | Cons (hd, tl) -> hd
+        let mutable k = 1
+        iter (fun elem -> if k = i then firstElem <- elem; k <- k + 1 else k <- k + 1) x
+        firstElem
+
+let tail x = 
+    match x with
+    | One t -> failwith "list length is not suitable"
+    | Cons (hd, tl) -> tl
+
+let tailOrZero x = // хитрый хвост листа, который для последнего элемента возвращает One 0  
+    match x with
+    | One t -> One 0
+    | Cons (hd, tl) -> tl
+
+let head x = indexElem x 1
+
+let rev x = 
+    if length x > 1
+    then fold (fun acc elem -> Cons (elem, acc)) (One (head x)) (tail x)
+    else x
+
+let map2 f x y = 
+    let rec _go f acc x y =
+        match x, y with
+        | One t, One k -> Cons (f t k, acc)
+        | Cons (hd, tl), Cons(hd1, tl1) -> _go f (Cons (f hd hd1, acc)) tl tl1
+        | _, _ -> failwith "cannot be in this case"
+    if length x <> length y
+    then failwith "lengths are not equal"
+    else
+        match x, y with
+        | One t, One k -> One (f t k)
+        | Cons (hd, tl), Cons (hd1, tl1) -> _go f (One (f hd hd1)) tl tl1 |> rev
+        | _, _ -> failwith "cannot be in this case"
