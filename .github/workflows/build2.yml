@@ -17,19 +17,21 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+      env: 
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
     - name: Build
       if: runner.os != 'Windows'
       run: |
         chmod +x ./build.sh
         ./build.sh
       env:
-        # Work around https://github.com/actions/setup-dotnet/issues/29
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
         DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
         CI: true
     - name: Build
       if: runner.os == 'Windows'
       run: ./build.cmd
       env:
-        # Work around https://github.com/actions/setup-dotnet/issues/29
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
         DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
         CI: true
