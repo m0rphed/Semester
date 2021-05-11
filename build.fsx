@@ -102,8 +102,8 @@ let runtimes = [
 
 let disableCodeCoverage = environVarAsBoolOrDefault "DISABLE_COVERAGE" false
 
-let githubToken = Environment.environVarOrNone "GITHUB_TOKEN"
-Option.iter(TraceSecrets.register "<GITHUB_TOKEN>")
+let githubToken = Environment.environVarOrNone "MY_COOL_TOKEN"
+Option.iter(TraceSecrets.register "MY_COOL_TOKEN")
 
 //-----------------------------------------------------------------------------
 // Helpers
