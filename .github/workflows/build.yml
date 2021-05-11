@@ -28,7 +28,7 @@ jobs:
         CI: true
     - name: setup token
       env: 
-        super_secret: ${{ secrets.MY_COOL_TOKEN }}
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
     - name: Build
       if: runner.os == 'Windows'
       run: ./build.cmd
