@@ -12,14 +12,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - name: setup token
-      env: 
-        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
     - uses: actions/checkout@v1
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: ${{ matrix.dotnet }}
+      env: 
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
     - name: Build
       if: runner.os != 'Windows'
       run: |
@@ -27,12 +26,14 @@ jobs:
         ./build.sh
       env:
         # Work around https://github.com/actions/setup-dotnet/issues/29
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
         DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
         CI: true
     - name: Build
       if: runner.os == 'Windows'
       run: ./build.cmd
       env:
+        MY_COOL_TOKEN : ${{ secrets.MY_COOL_TOKEN }}
         # Work around https://github.com/actions/setup-dotnet/issues/29
         DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
         CI: true
