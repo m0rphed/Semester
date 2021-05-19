@@ -3,6 +3,8 @@
 set -eu
 set -o pipefail
 
+dotnet tool install Paket
+
 echo "Adding token for calculator..."
 dotnet paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.json" $MY_COOL_TOKEN
 
