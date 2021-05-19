@@ -2,7 +2,7 @@
 
 set -eu
 set -o pipefail
-dotnet new tool-manifest
+dotnet new tool-manifest --force
 dotnet tool install Paket
 
 echo "Adding token for calculator..."
