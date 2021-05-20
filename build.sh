@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export MY_COOL_TOKEN='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'
+export MY_COOL_TOKEN='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'
 
 # Reset
 Color_Off='\033[0m'       # Text Reset
