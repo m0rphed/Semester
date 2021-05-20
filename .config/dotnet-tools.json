@@ -21,7 +21,7 @@
       ]
     },
     "paket": {
-      "version": "5.257.0", // last stable paket version
+      "version": "5.257.0",
       "commands": [
         "paket"
       ]
