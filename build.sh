@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export NUGET_AUTH_TOKEN='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'
+# export NUGET_AUTH_TOKEN='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'
 
 # Reset
 Color_Off='\033[0m'       # Text Reset
