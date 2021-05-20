@@ -9,25 +9,25 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "4.2.15",
+      "version": "4.8.7",
       "commands": [
         "reportgenerator"
       ]
     },
     "fake-cli": {
-      "version": "5.20.0",
+      "version": "5.20.4",
       "commands": [
         "fake"
       ]
     },
     "paket": {
-      "version": "5.245.1",
+      "version": "5.257.0", // last stable paket version
       "commands": [
         "paket"
       ]
     },
     "fsharp-analyzers": {
-      "version": "0.4.0",
+      "version": "0.7.0",
       "commands": [
         "fsharp-analyzers"
       ]
