@@ -22,7 +22,7 @@ jobs:
       - name: Build on UNIX
         if: runner.os != 'Windows'
         env:
-          # MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # # Work around https://github.com/actions/setup-dotnet/issues/29
           # DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
           CI: true
@@ -33,7 +33,7 @@ jobs:
         if: runner.os == 'Windows'
         run: ./build.cmd
         env:
-          # MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Work around https://github.com/actions/setup-dotnet/issues/29
           # DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
           CI: true
