@@ -9,19 +9,19 @@
       ]
     },
     "dotnet-reportgenerator-globaltool": {
-      "version": "4.8.7",
+      "version": "4.2.15",
       "commands": [
         "reportgenerator"
       ]
     },
     "fake-cli": {
-      "version": "5.20.4",
+      "version": "5.20.0",
       "commands": [
         "fake"
       ]
     },
     "paket": {
-      "version": "5.257.0",
+      "version": "5.245.1",
       "commands": [
         "paket"
       ]
