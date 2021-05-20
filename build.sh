@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+export MY_COOL_TOKEN='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'
+
 # Reset
 Color_Off='\033[0m'       # Text Reset
 
@@ -31,6 +33,6 @@ dotnet paket restore
 PAKET_SKIP_RESTORE_TARGETS=true
 FAKE_DETAILED_ERRORS=true
 
-printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$\@\"'...${Color_Off}\n"
+printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$@\"'...${Color_Off}\n"
 # Start fake-cli and build repository with targets
 dotnet fake build -t "$@"
