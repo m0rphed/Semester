@@ -21,8 +21,10 @@ jobs:
         MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
     - name: Build
       if: runner.os != 'Windows'
+      # export MY_COOL_TOKEN="${{ secrets.MY_COOL_TOKEN }}"
       run: |
-        echo "Token: $MY_COOL_TOKEN"
+        MY_COOL_TOKEN=${{ secrets.MY_COOL_TOKEN }}
+        echo $MY_COOL_TOKEN
         chmod +x ./build.sh
         ./build.sh
       env:
