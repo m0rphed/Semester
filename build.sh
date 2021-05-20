@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export MY_COOL_TOKEN='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'
+export MY_COOL_TOKEN='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'
 
 # Reset
 Color_Off='\033[0m'       # Text Reset
@@ -29,10 +29,10 @@ dotnet paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.j
 printf "${Red}[info] ${Cyan}Running 'dotnet paket restore'...${Color_Off}\n"
 dotnet paket restore
 
-# Set enviroment variales for paket and fake-cli
+printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$@\" with specified flags'...${Color_Off}\n"
+# Set flags for paket and fake-cli
 PAKET_SKIP_RESTORE_TARGETS=true
 FAKE_DETAILED_ERRORS=true
 
-printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$@\"'...${Color_Off}\n"
 # Start fake-cli and build repository with targets
 dotnet fake build -t "$@"
