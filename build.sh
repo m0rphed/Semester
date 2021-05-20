@@ -22,7 +22,7 @@ printf "${Red}[info] ${Cyan}Running 'dotnet tool restore'...${Color_Off}\n"
 dotnet tool restore
 
 printf "${Red}[info] ${Cyan}Adding token for calculator...${Color_Off}\n"
-printf "${Yellow}token: ${Yellow} => { $NUGET_AUTH_TOKEN }${Color_Off}\n"
+#printf "${Yellow}token: ${Yellow} => { $NUGET_AUTH_TOKEN }${Color_Off}\n"
 dotnet paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.json" "$NUGET_AUTH_TOKEN"
 # dotnet nuget add source --name "GitHub_Arithm" --username AndreiZaycev --password "$MY_COOL_TOKEN" "https://nuget.pkg.github.com/kirillgarbar/index.json" --store-password-in-clear-text
 
