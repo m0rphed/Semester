@@ -21,17 +21,15 @@ jobs:
         MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
     - name: Build
       if: runner.os != 'Windows'
-      # export MY_COOL_TOKEN="${{ secrets.MY_COOL_TOKEN }}"
-      run: |
-        MY_COOL_TOKEN=${{ secrets.MY_COOL_TOKEN }}
-        echo $MY_COOL_TOKEN
-        chmod +x ./build.sh
-        ./build.sh
       env:
         MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
         # Work around https://github.com/actions/setup-dotnet/issues/29
         DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
         CI: true
+      run: |
+        echo ${{ secrets.MY_COOL_TOKEN }}
+        chmod +x ./build.sh
+        ./build.sh
     - name: Build
       if: runner.os == 'Windows'
       run: ./build.cmd
