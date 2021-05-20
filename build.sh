@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export MY_COOL_TOKEN='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'
+# export NUGET_AUTH_TOKEN='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'
 
 # Reset
 Color_Off='\033[0m'       # Text Reset
@@ -22,17 +22,17 @@ printf "${Red}[info] ${Cyan}Running 'dotnet tool restore'...${Color_Off}\n"
 dotnet tool restore
 
 printf "${Red}[info] ${Cyan}Adding token for calculator...${Color_Off}\n"
-printf "${Yellow}token: ${Yellow} => { $MY_COOL_TOKEN }${Color_Off}\n"
-dotnet paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.json" "$MY_COOL_TOKEN"
+printf "${Yellow}token: ${Yellow} => { $NUGET_AUTH_TOKEN }${Color_Off}\n"
+dotnet paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.json" "$NUGET_AUTH_TOKEN"
 # dotnet nuget add source --name "GitHub_Arithm" --username AndreiZaycev --password "$MY_COOL_TOKEN" "https://nuget.pkg.github.com/kirillgarbar/index.json" --store-password-in-clear-text
 
 printf "${Red}[info] ${Cyan}Running 'dotnet paket restore'...${Color_Off}\n"
 dotnet paket restore
 
-# Set enviroment variales for paket and fake-cli
+printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$@\" with specified flags'...${Color_Off}\n"
+# Set flags for paket and fake-cli
 PAKET_SKIP_RESTORE_TARGETS=true
 FAKE_DETAILED_ERRORS=true
 
-printf "${Red}[info] ${Cyan}Running 'dotnet fake build -t \"\$@\"'...${Color_Off}\n"
 # Start fake-cli and build repository with targets
 dotnet fake build -t "$@"

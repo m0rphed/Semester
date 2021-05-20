@@ -4,7 +4,6 @@ on: [push, pull_request]
 
 jobs:
   build:
-
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
@@ -12,29 +11,29 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v1
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: ${{ matrix.dotnet }}
-      env: 
-        MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
-    - name: Build
-      if: runner.os != 'Windows'
-      env:
-        MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
-        # Work around https://github.com/actions/setup-dotnet/issues/29
-        DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
-        CI: true
-      run: |
-        echo ${{ secrets.MY_COOL_TOKEN }}
-        chmod +x ./build.sh
-        ./build.sh
-    - name: Build
-      if: runner.os == 'Windows'
-      run: ./build.cmd
-      env:
-        MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
-        # Work around https://github.com/actions/setup-dotnet/issues/29
-        DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
-        CI: true
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: ${{ matrix.dotnet }}
+          source-url: https://nuget.pkg.github.com/kirillgarbar/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build on UNIX
+        if: runner.os != 'Windows'
+        env:
+          # MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
+          # # Work around https://github.com/actions/setup-dotnet/issues/29
+          # DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
+          CI: true
+        run: |
+          chmod +x ./build.sh
+          ./build.sh
+      - name: Build on Windows
+        if: runner.os == 'Windows'
+        run: ./build.cmd
+        env:
+          # MY_COOL_TOKEN: ${{ secrets.MY_COOL_TOKEN }}
+          # Work around https://github.com/actions/setup-dotnet/issues/29
+          # DOTNET_ROOT: ${{ runner.tool_cache }}/dncs/${{ matrix.dotnet }}/x64
+          CI: true
