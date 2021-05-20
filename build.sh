@@ -10,8 +10,10 @@ FAKE_DETAILED_ERRORS=true
 dotnet tool install --global Paket
 
 echo "Adding token for calculator..."
-echo $MY_COOL_TOKEN$
+echo $MY_COOL_TOKEN
 paket config add-token "https://nuget.pkg.github.com/kirillgarbar/index.json" "$MY_COOL_TOKEN"
+paket config add-token 'https://www.nuget.org' "$MY_COOL_TOKEN"
+paket config add-token "https://www.myget.org/F/avalonia-ci/api/v2" "$MY_COOL_TOKEN"
 
 echo "Restoring dotnet tools..."
 dotnet tool restore
